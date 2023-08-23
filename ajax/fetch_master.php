@@ -83,5 +83,101 @@ if (!empty($maxtableName))
     }
 }
 
+
+if(isset($_GET['item']))
+{
+    $item=$_GET["item"];
+    if($item=='fetch_items')
+    {
+        $tabno='item';
+    }else if($item=='fetch_vendors')
+    {
+        $tabno='vendor';
+    }
+
+    $fetchStmt=$conn->prepare("SELECT * FROM $tabno");
+    $fetchStmt->execute();
+    $result=$fetchStmt->get_result();
+
+    $rows=array();
+    while($row=$result->fetch_assoc())
+    {
+        $rows[] =$row;
+    }
+    echo json_encode($rows);
+    $fetchStmt->close();
+}
+
+//purchase
+
+if(isset($_GET['purchase']))
+{
+    $purchaseno=$_GET["purchase"];
+    if($purchaseno=='category')
+    {
+        $fetchStmt=$conn->prepare("SELECT DISTINCT `category` FROM `item`");
+    }else if($purchaseno=='location')
+    {
+        $fetchStmt=$conn->prepare("SELECT * FROM `location`");
+    }else if($purchaseno=='gst')
+    {
+        $fetchStmt=$conn->prepare("SELECT * FROM `gst`");
+    }
+    
+    $fetchStmt->execute();
+    $result=$fetchStmt->get_result();
+
+    $rows=array();
+    while($row=$result->fetch_assoc())
+    {
+        $rows[] =$row;
+    }
+    echo json_encode($rows);
+    $fetchStmt->close();
+}
+
+if(isset($_GET['purchase1']))
+{
+    $name=$_GET['purchase1'];
+    $inputElement=$_GET["inputElement"];
+    if($inputElement=='category')
+    {
+        $coloum='category';
+        $fetchName='brand';
+    }else if($inputElement=='brand')
+    {
+        $coloum='brand';
+        $fetchName='product';
+    }else if($inputElement=='product')
+    {
+        $coloum='product';
+        $fetchName='flavor';
+    }
+    else if($inputElement=='flavor')
+    {
+        $coloum='flavor';
+        $fetchName='unit';
+    }else if($inputElement=='unit')
+    {
+        $coloum='unit';
+        $fetchName='item_code';
+    }else if($inputElement=='item_code')
+    {
+        $coloum='item_code';
+        $fetchName='category,brand,product,flavor,unit';
+    }
+
+    $fetchStmt=$conn->prepare("SELECT DISTINCT $fetchName FROM `item` WHERE $coloum = ?");
+    $fetchStmt->bind_param("s", $name); 
+    $fetchStmt->execute();
+    $result=$fetchStmt->get_result();
+    $rows=array();
+    while($row=$result->fetch_assoc())
+    {
+        $rows[] =$row;
+    }
+    echo json_encode($rows);
+    $fetchStmt->close();
+}
 $conn->close();
 ?>

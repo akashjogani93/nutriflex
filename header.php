@@ -22,6 +22,8 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.0/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <link rel="stylesheet" href="asset/style.css">
 
   <script src="js/main.js"></script>
@@ -41,6 +43,10 @@
           <i class="fa fa-home"></i><span>Home</span>
         </li>
         <div class="belowli"></div>
+        <li class="list-group-item" id="pur">
+          <i class="fa fa-home"></i><span>PURCHASE</span>
+        </li>
+        <div class="belowli"></div>
         <li class="list-group-item" id="item">
           <i class="fa fa-info-circle"></i><span>ITEM</span>
         </li>
@@ -51,51 +57,6 @@
         <div class="belowli"></div>
         <li class="list-group-item" id="vendor">
           <i class="fa fa-shopping-cart"></i><span>VENDOR</span>
-        </li>
-        <div class="belowli"></div>
-        <li class="list-group-item">
-          <i class="fa fa-envelope"></i><span>Contact</span>
-        </li>
-        <div class="belowli"></div>
-        <!-- Add more list items as needed -->
-        <li class="list-group-item">
-          <i class="fa fa-home"></i><span>Home</span>
-        </li>
-        <div class="belowli"></div>
-        <li class="list-group-item">
-          <i class="fa fa-info-circle"></i><span>About</span>
-        </li>
-        <div class="belowli"></div>
-        <li class="list-group-item">
-          <i class="fa fa-cogs"></i><span>Services</span>
-        </li>
-        <div class="belowli"></div>
-        <li class="list-group-item">
-          <i class="fa fa-shopping-cart"></i><span>Products</span>
-        </li>
-        <div class="belowli"></div>
-        <li class="list-group-item">
-          <i class="fa fa-envelope"></i><span>Contact</span>
-        </li>
-        <div class="belowli"></div>
-        <li class="list-group-item">
-          <i class="fa fa-home"></i><span>Home</span>
-        </li>
-        <div class="belowli"></div>
-        <li class="list-group-item">
-          <i class="fa fa-info-circle"></i><span>About</span>
-        </li>
-        <div class="belowli"></div>
-        <li class="list-group-item">
-          <i class="fa fa-cogs"></i><span>Services</span>
-        </li>
-        <div class="belowli"></div>
-        <li class="list-group-item">
-          <i class="fa fa-shopping-cart"></i><span>Products</span>
-        </li>
-        <div class="belowli"></div>
-        <li class="list-group-item">
-          <i class="fa fa-envelope"></i><span>Contact</span>
         </li>
         <div class="belowli"></div>
       </ul>

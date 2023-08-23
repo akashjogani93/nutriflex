@@ -109,7 +109,8 @@ body
 .cat .box-header-names
 {
   text-align: center;
-  color: #0921F8;
+  color: #393E46;
+  text-transform: uppercase;
 }
 .box-header .getSpace
 {
@@ -148,7 +149,13 @@ body
 }
 
 .table-container {
-  max-height: 480px; /* Set the desired maximum height */
+  max-height: 480px;
+  overflow-y: auto;
+  padding: 40px;
+  width: 100%;
+}
+.table-container1 {
+  max-height: 300px;
   overflow-y: auto;
   padding: 40px;
 }
@@ -160,7 +167,38 @@ body
   font-size: 16px;
   text-align: center;
 }
+label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  /* font-style: italic; */
+  color: #000;
+}
 
+.form-control {
+  border-radius: 0 !important;
+  color: #393E46;
+  font-size: 14px;
+  padding: 0 2px 0 0;
+}
+
+.form-control::placeholder {
+  color:#393E46;
+}
+
+.form-control option {
+  background-color: #393E46;
+  color: #EEEEEE;
+  font-weight: bold;
+}
+.form-control option:hover {
+  background-color: white !important;
+  color: white;
+}
+.btn
+{
+  border-radius: 0;
+}
     @media (max-width: 991px) {
       .sidebar {
         position: relative;
