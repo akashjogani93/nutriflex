@@ -75,6 +75,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             $ven->updateData($venName, $venGst, $venMobile, $venAdds,$slno);
         }
     }
+
+    if (isset($_POST['ven']) && isset($_POST['purDate']) && isset($_POST['totalAmt']) && isset($_POST['itemList']))
+    {
+        $venName = $_POST['ven'];
+        $purDate = $_POST['purDate'];
+        $totalAmt = $_POST['totalAmt'];
+        $itemList=$_POST['itemList'];
+        
+        $purchase= new Purchase($conn);
+        $purchase->purchaseData($venName, $purDate, $totalAmt, $itemList);
+        
+    }
 }
 
 ?>

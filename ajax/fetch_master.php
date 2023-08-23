@@ -179,5 +179,56 @@ if(isset($_GET['purchase1']))
     echo json_encode($rows);
     $fetchStmt->close();
 }
+
+if(isset($_GET['purViewRecord']))
+{
+    $fetchStmt=$conn->prepare("SELECT * FROM `purchase`");
+    $fetchStmt->execute();
+    $result=$fetchStmt->get_result();
+
+    $rows=array();
+    while($row=$result->fetch_assoc())
+    {
+        $rows[] =$row;
+    }
+    echo json_encode($rows);
+    $fetchStmt->close();
+}
+
+
+if(isset($_GET['purViewRecordItem']))
+{
+    $pur_id=$_GET['pur_id'];
+    $fetchStmt=$conn->prepare("SELECT * FROM `purchase_data` WHERE `pur_id`= ?");
+    $fetchStmt->bind_param("i",$pur_id);
+    $fetchStmt->execute();
+    $result=$fetchStmt->get_result();
+
+    $rows=array();
+    while($row=$result->fetch_assoc())
+    {
+        $rows[] =$row;
+    }
+    echo json_encode($rows);
+    $fetchStmt->close();
+}
+
+if(isset($_GET['stock']))
+{
+    $fetchStmt = $conn->prepare("SELECT *, SUM(qty) AS total_qty FROM `stock` GROUP BY item_code");
+    $fetchStmt->execute();
+
+    $result = $fetchStmt->get_result();
+
+    $rows = array();
+    while ($row = $result->fetch_assoc()) {
+        $rows[] = $row;
+    }
+
+    echo json_encode($rows);
+
+    $fetchStmt->close();
+
+}
 $conn->close();
 ?>

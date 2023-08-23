@@ -350,6 +350,14 @@ class HeaderTab
         {
           this.navigateToPage("purchase.php");
         }
+        else if(tabId === "stock") 
+        {
+          this.navigateToPage("stock.php");
+        }
+        else if(tabId === "sell") 
+        {
+          this.navigateToPage("sell.php");
+        }
     }
     navigateToPage(pageUrl)
     {
@@ -812,6 +820,27 @@ class Purchase {
 
     initializeTabs() 
     {
+        const vm=this;
+        const tabElements = document.querySelectorAll('.cat');
+        tabElements.forEach(tabName => {
+            tabName.addEventListener('click', () => {
+                tabElements.forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                tabName.classList.add('active');
+                if(tabName.id=='viewPur')
+                {   
+                    $('#addPurchaseData').hide();
+                    $('#viewpurchaseData').show();
+                    vm.viewPurchaseRecord();
+                }else if(tabName.id=='addPur')
+                {
+                    $('#viewpurchaseData').hide();
+                    $('#addPurchaseData').show();
+                }
+            });
+        });
+
         this.dropdowns.forEach(dropdown =>{
             $.ajax({
                 url: 'ajax/fetch_master.php',
@@ -843,7 +872,6 @@ class Purchase {
         });
         
         const selectElements = document.querySelectorAll('.onchange');
-        const vm=this;
         selectElements.forEach(function (element) 
         {
             element.addEventListener('change', function (event)
@@ -896,6 +924,7 @@ class Purchase {
             vm.priceCalculation(totalPriceValue,gst,qty)
         });
 
+
         $('#qty, #price, #mrpPrice, #salePrice').keypress(function(event)
         {
             var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -906,6 +935,13 @@ class Purchase {
             {
                 return true;   
             }
+        });
+
+        //final Submit
+        const submitPurchase = document.getElementById('submitPurchase');
+        submitPurchase.addEventListener('click', (event) => 
+        {
+            this.submitData();
         });
     }
 
@@ -1088,6 +1124,7 @@ class Purchase {
                 const totalAmt = document.getElementById('totalAmt').value=totalAmount;
             }
     }
+
     attachDeleteButtonHandlers() {
         const tableBody = document.getElementById('itemTableBoady');
         tableBody.addEventListener('click', (event) => {
@@ -1104,6 +1141,193 @@ class Purchase {
         localStorage.setItem('items', JSON.stringify(items));
         this.fetchItems(); // Refresh the table after deletion
     }
+
+    submitData()
+    {
+        const vm=this;
+        let venName=$('#venName').val();
+        let purDate=$('#purDate').val();
+        let totalAmt=$('#totalAmt').val();
+        var input=['#venName','#purDate','#totalAmt'];
+        for(let i=0; i<input.length; i++)
+        {
+            if($(input[i]).val() == '')
+            {
+                $(input[i]).css("border", "1px solid red");
+                return;
+            }else
+            {
+                $(input[i]).css("border","");
+            }
+        }
+        let items = JSON.parse(localStorage.getItem('items'));
+        let log=$.ajax({
+            url:'ajax/submit_master.php',
+            type:'post',
+            dataType:'json',
+            data:{
+                ven:venName,
+                purDate:purDate,
+                totalAmt:totalAmt,
+                itemList :items,
+            },
+            success: function(response)
+            {
+                if(response.message=='Purchased successfully..')
+                {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: response.message,
+                        // showConfirmButton: false,
+                        // timer: 1500
+                      })
+                    for(var i=0;i<input.length;i++)
+                    {
+                        if(i != 1)
+                        {
+                            $(input[i]).val('');
+                        }
+                    }
+                    localStorage.removeItem('items');
+                    vm.fetchItems();
+                }else
+                {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                        // showConfirmButton: false,
+                        // timer: 1500
+                      })
+                }
+            }
+        });
+        console.log(log);
+    }
+
+    viewPurchaseRecord()
+    {
+        let log= $.ajax({
+            url: 'ajax/fetch_master.php',
+            type: 'GET',
+            data: {
+                purViewRecord:'purViewRecord',
+            },
+            dataType:'json',
+            success: function (response) 
+            {
+                // console.log(response);
+
+                const tbodyElement = document.getElementById('viewPurchaseDataTable');
+                tbodyElement.innerHTML = '';
+                response.forEach(rowData => 
+                {
+                    const rowHTML = `<tr>
+                                        <td>${rowData.id}</td>
+                                        <td>${rowData.venName}</td>
+                                        <td>${rowData.purchase_date}</td>
+                                        <td>${rowData.totalamount}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary view-button" data-id="${rowData.id}">View</button>
+                                        </td>
+                                    </tr>`;
+                        tbodyElement.innerHTML += rowHTML;
+                });
+            }
+        });
+
+        document.addEventListener('click', event => 
+        {
+            if(event.target.classList.contains('view-button'))
+            {
+                $('#dataTable1').hide();
+                $('#dataTable2').show();
+                const row = event.target.closest('tr');
+                let cat_id = row.querySelector('.view-button').getAttribute('data-id');
+                // console.log(cat_id);
+                let log= $.ajax({
+                    url: 'ajax/fetch_master.php',
+                    type: 'GET',
+                    data: {
+                        purViewRecordItem:'purViewRecord',
+                        pur_id:cat_id,
+                    },
+                    dataType:'json',
+                    success: function (response) 
+                    {
+                        console.log(response);
+        
+                        const tbodyElement = document.getElementById('purchaseItems');
+                        tbodyElement.innerHTML = '';
+                        response.forEach((item,index)=> 
+                        {
+                            const rowHTML = `<tr>
+                                                <td>${index + 1}</td>
+                                                <td>${item.category} - ${item.brand} - ${item.product} - ${item.flavor}</td>
+                                                <td>${item.unit}</td>
+                                                <td>${item.gst}</td>
+                                                <td>${item.qty}</td>
+                                                <td>${item.gstprice}</td>
+                                                <td>${item.baseprice}</td>
+                                                <td>${item.mrpprice}</td>
+                                                <td>${item.saleprice}</td>
+                                                <td>${item.totalprice}</td>
+                                                <td>${item.exp}</td>
+                                            </tr>`;
+                                tbodyElement.innerHTML += rowHTML;
+                        });
+                    }
+                });
+
+            }
+        });
+        document.addEventListener('click', event => 
+        {
+            if(event.target.classList.contains('back-button'))
+            {
+                $('#dataTable2').hide();
+                $('#dataTable1').show();
+
+            }
+        });
+    }
 }
 
+class Stock{
+    constructor() 
+    {
+        this.initializeTabs();
+    }
+    initializeTabs()
+    {
+        let log= $.ajax({
+            url: 'ajax/fetch_master.php',
+            type: 'GET',
+            data: {
+                stock:'stock',
+            },
+            dataType:'json',
+            success: function (response) 
+            {
+                console.log(response);
 
+                const tbodyElement = document.getElementById('itemTableBoady');
+                tbodyElement.innerHTML = '';
+                response.forEach((item,index)=> 
+                {
+                    const rowHTML = `<tr>
+                                        <td>${index + 1}</td>
+                                        <td>${item.category} - ${item.brand} - ${item.product} - ${item.flavor}</td>
+                                        <td>${item.unit}</td>
+                                        <td>${item.total_qty}</td>
+                                        <td>${item.item_code}</td>
+                                    </tr>`;
+                        tbodyElement.innerHTML += rowHTML;
+                });
+            }
+        });
+        console.log(log)
+    }
+}

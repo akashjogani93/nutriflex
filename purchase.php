@@ -7,6 +7,10 @@
             background-color: white;
             color:black;
         }
+        .active
+        {
+            background-color: white;
+        }
     </style>
     <div class="content">
         <div class="container main mt-5">
@@ -18,13 +22,16 @@
             <div class="box-header">
                 <div class="getSpace">
                 </div>
-                <div class="cat active" id="itembox">
+                <div class="cat active" id="addPur">
                     <h6 class="box-header-names">PURCHASE MASTER</h6>
                 </div>
                 <div class="getSpace">
                 </div>
+                <div class="cat" id="viewPur">
+                    <h6 class="box-header-names">View Purchase</h6>
+                </div>
             </div>
-            <div class="box-content">
+            <div class="box-content" id="addPurchaseData">
                 <div class="container-fluid adding-category">
                     <!-- <div class="row">
                         <div class="col-md-3">
@@ -160,16 +167,11 @@
                     </div>
                 </div>
                 <div class="container-fluid">
-                    <!-- <div class="row">
-                        <div class="col-md-12">
-                            <center><h4 class="content-header">VIEW</h4></center>
-                        </div>
-                    </div> -->
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-container">
                                 <table id="dataTable"  class="table table-bordered">
-                                <thead>
+                                    <thead>
                                         <tr>
                                             <th>SL.NO</th>
                                             <th>Category-Brand-Product-Flavor</th>
@@ -199,7 +201,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="cate">Select Vendor</label>
-                                <select name="venName" id="venName" class="form-control onchange">
+                                <select name="venName" id="venName" class="form-control">
                                     <option value="">Select Vendor</option>
                                 </select>
                             </div>
@@ -220,6 +222,51 @@
                             <div class="form-group" style="display:flex;">
                                 <button class="btn btn-info" id="submitPurchase" style="margin-top:30px; border-radius: 0; margin-right:5px;">PURCHASE</button>
                                 <button class="btn btn-danger" id="cancelPurchase" style="margin-top:30px; border-radius: 0;">CANCEL</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-content" id="viewpurchaseData" style="display:none;">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-container">
+                                <table id="dataTable1"  class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>SL.NO</th>
+                                            <th>Vendor Name</th>
+                                            <th>Purchase Date</th>
+                                            <th>Total Amount</th>
+                                            <th>View</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="viewPurchaseDataTable">
+                                        
+                                    </tbody>
+                                </table>
+                                <table id="dataTable2"  class="table table-bordered" style="display:none">
+                                    <thead>
+                                        <tr><th colspan="12"><button class="btn btn-sm btn-primary back-button">Back</button></th></tr>
+                                        <tr>
+                                            <th>SL.NO</th>
+                                            <th>Category-Brand-Product-Flavor</th>
+                                            <th>Unit</th>
+                                            <th>GST</th>
+                                            <th>Qty</th>
+                                            <th>Gst/Price</th>
+                                            <th>Base/Price</th>
+                                            <th>MRP</th>
+                                            <th>Sale/Price</th>
+                                            <th>Total</th>
+                                            <th>Expiry</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="purchaseItems">
+                                        
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

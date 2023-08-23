@@ -59,6 +59,14 @@
           <i class="fa fa-shopping-cart"></i><span>VENDOR</span>
         </li>
         <div class="belowli"></div>
+        <li class="list-group-item" id="stock">
+          <i class="fa fa-shopping-cart"></i><span>STOCK</span>
+        </li>
+        <div class="belowli"></div>
+        <li class="list-group-item" id="sell">
+          <i class="fa fa-shopping-cart"></i><span>Invoice</span>
+        </li>
+        <div class="belowli"></div>
       </ul>
     </div>
     <script>

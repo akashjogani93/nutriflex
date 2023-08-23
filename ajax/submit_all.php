@@ -513,4 +513,72 @@ class Vendor {
         }
     }
 }
+
+class Purchase
+{
+    private $conn;
+
+    public function __construct($conn) {
+        $this->conn = $conn;
+    }
+    public function purchaseData($venName, $purDate, $totalAmt, $itemList) 
+    {
+
+        try{
+            $purchaseStmt=$this->conn->prepare("INSERT INTO `purchase`(`venName`, `purchase_date`, `totalamount`) VALUES (?,?,?)");
+            $purchaseStmt->bind_param("ssd",$venName,$purDate,$totalAmt);
+            if($purchaseStmt->execute())
+            {
+                try{
+                    $purchaseId = $purchaseStmt->insert_id;
+                    foreach($itemList as $item)
+                    {
+                        $category=$item['category'];
+                        $brand=$item['brand'];
+                        $product=$item['product'];
+                        $flavor=$item['flavor'];
+                        $unit=$item['unit'];
+                        $location=$item['location'];
+                        $expDate=$item['expDate'];
+                        $gst=$item['gst'];
+                        $qty=$item['qty'];
+                        $price=$item['price'];
+                        $gstPer=$item['gstPer'];
+                        $basePer=$item['basePer'];
+                        $mrpPrice=$item['mrpPrice'];
+                        $salePrice=$item['salePrice'];
+                        $item_code=$item['item_code'];
+                        $purchase_dataStmt=$this->conn->prepare("INSERT INTO `purchase_data`(`category`, `brand`, `product`, `flavor`, `unit`, `location`, `exp`, `gst`, `qty`, `totalprice`, `gstprice`, `baseprice`, `mrpprice`, `saleprice`, `item_code`, `pur_id`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                        $purchase_dataStmt->bind_param("sssssssdddddddsi",$category,$brand,$product,$flavor,$unit,$location,$expDate,$gst,$qty,$price,$gstPer,$basePer,$mrpPrice,$salePrice,$item_code,$purchaseId);
+                        if($purchase_dataStmt->execute())
+                        {
+                            $stock_dataStmt=$this->conn->prepare("INSERT INTO `stock`(`category`, `brand`, `product`, `flavor`, `unit`, `location`, `exp`, `gst`, `qty`, `totalprice`, `gstprice`, `baseprice`, `mrpprice`, `saleprice`, `item_code`, `pur_id`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                            $stock_dataStmt->bind_param("sssssssdddddddsi",$category,$brand,$product,$flavor,$unit,$location,$expDate,$gst,$qty,$price,$gstPer,$basePer,$mrpPrice,$salePrice,$item_code,$purchaseId);
+                            if($stock_dataStmt->execute())
+                            {
+                                echo json_encode(['message' => 'Purchased successfully..']);
+                            }
+                        }
+                    }
+                }catch(mysqli_sql_exception $nestedException)
+                {
+                    echo json_encode(['message' => 'Something Went Wrong..']);
+                }
+            }else 
+            {
+                echo json_encode(['message' => 'Failed to insert data']);
+            }
+
+        }catch(mysqli_sql_exception $e)
+        {
+            echo json_encode(['message' => 'Something Went Wrong..']);
+        }
+
+
+        // foreach($itemList as $item)
+        // {
+        //     echo json_encode($item['item_code']);
+        // }
+    }
+}
 ?>
