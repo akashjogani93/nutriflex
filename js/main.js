@@ -1331,3 +1331,131 @@ class Stock{
         console.log(log)
     }
 }
+
+class Invoice
+{
+    constructor()
+    {
+        this.initializeTabs();
+    }
+    initializeTabs()
+    {
+        $.ajax({
+            url:'ajax/fetch_master.php',
+            type :'POST',
+            dataType:'json',
+            data:{InvoiceCate:'category'},
+            success: function(response)
+            {
+                console.log(response);
+                var dropdownElement = $('#category');
+                dropdownElement.empty();
+                dropdownElement.append($('<option>').text('Select').val(''));
+                $.each(response, function (index, item) 
+                {
+                    dropdownElement.append($('<option>').text(item.category).val(item.category));
+                });
+            }
+        });
+
+        const itemCode=document.getElementById('item_code');
+        itemCode.addEventListener('input',function(event)
+        {
+            let selectedValue = event.target.value;
+            const itemCode_Id = event.target.id;
+            if(!selectedValue)return;
+            let log=$.ajax({
+                url:'ajax/fetch_master.php',
+                type :'POST',
+                dataType:'json',
+                data:{sellMaster:selectedValue},
+                success: function(response)
+                {
+                    var dropdownElements = [
+                        $('#brand'),$('#product'),$('#flavor'),$('#unit')
+                    ];
+                    if (response.length === 0)
+                    {
+                        for(var i=0;i<dropdownElements.length;i++)
+                        {
+                            var dropdownElement=dropdownElements[i];
+                            dropdownElement.empty();
+                            dropdownElement.append($('<option>').text('Select').val(''));
+                        }
+                        return;
+                    }
+
+                    for(var i=0;i<dropdownElements.length;i++)
+                    {
+                        var dropdownElement=dropdownElements[i];
+                        dropdownElement.empty();
+                        var checkDuplicate = {};
+                        $.each(response, function (index, item)
+                        {
+                            if(i==0)
+                            {
+                                if (!checkDuplicate[item.brand])
+                                {
+                                    checkDuplicate[item.brand] = true;
+                                    dropdownElement.append($('<option>').text(item.brand).val(item.brand));
+                                }
+                            }else if(i==1)
+                            {
+                                if (!checkDuplicate[item.product]) 
+                                {
+                                    checkDuplicate[item.product] = true;
+                                    dropdownElement.append($('<option>').text(item.product).val(item.product));
+                                }
+                            }else if(i==2)
+                            {
+                                if (!checkDuplicate[item.flavor]) 
+                                {
+                                    checkDuplicate[item.flavor] = true;
+                                    dropdownElement.append($('<option>').text(item.flavor).val(item.flavor));
+                                }
+                            }
+                            else if(i==3)
+                            {
+                                if (!checkDuplicate[item.unit]) 
+                                {
+                                    checkDuplicate[item.unit] = true;
+                                    dropdownElement.append($('<option>').text(item.unit).val(item.unit));
+                                }
+                            }
+                        });
+                    }
+                    var insideSell='';
+                    response.forEach((item,index)=> 
+                    {
+                        $('#category').val(item.category);
+                         insideSell=`<div class="row"> <div class="col-md-2">
+                                    <label for="cate">Location</label>
+                                    <input type="text" class="form-control" id="location" placeholder="location..." readonly value="${item.location}">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="cate">Expiry Date</label>
+                                    <input type="date" class="form-control" id="expDate" readonly value="${item.exp}">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="cate">GST %</label>
+                                    <input type="text" class="form-control" id="expDate" readonly value="${item.gst}">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="cate">QTY</label>
+                                    <input type="text" class="form-control" id="qty" readonly value="${item.qty}">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="cate">Mrp Price</label>
+                                    <input type="text" class="form-control" id="salePrice" readonly value="${item.mrpprice}">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="cate">Sale Price</label>
+                                    <input type="text" class="form-control" id="mrpPrice" readonly value="${item.saleprice}">
+                                </div></div>`;
+                            $('#indeseRows').append(insideSell);
+                    });
+                }
+            });
+        });
+    }
+}

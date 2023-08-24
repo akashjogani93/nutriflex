@@ -11,7 +11,7 @@
     <div class="content">
         <div class="container main mt-5">
             <h1>Welcome to Flex Nutri</h1>
-            <p>Your introductory content goes here.
+            <!-- <p>Your introductory content goes here.
                 Հայերեն Shqip ‫العربية Български Català 中文简体 Hrvatski Česky Dansk Nederlands English Eesti Filipino Suomi Français ქართული Deutsch Ελληνικά ‫עברית हिन्दी Magyar Indonesia Italiano Latviski Lietuviškai македонски Melayu Norsk Polski Português Româna Pyccкий Српски Slovenčina Slovenščina Español Svenska ไทย Türkçe Українська Tiếng Việt
                 Lorem Ipsum
                 "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
@@ -62,7 +62,7 @@
 
                 help@lipsum.com
                 Privacy Policy · Do Not Sell My Personal Information · Change Consent
-            </p>
+            </p> -->
         </div>
     </div>
     <?php include('footer.php');?>

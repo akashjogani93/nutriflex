@@ -230,5 +230,42 @@ if(isset($_GET['stock']))
     $fetchStmt->close();
 
 }
+
+
+
+// Purchase Master
+if(isset($_POST['sellMaster']))
+{
+    $item_code=$_POST['sellMaster'];
+    $sellStmt=$conn->prepare("SELECT * FROM `stock` WHERE `item_code`= ?");
+    $sellStmt->bind_param("s",$item_code);
+    $sellStmt->execute();
+    $result= $sellStmt->get_result();
+
+    $stock = array();
+    while($row = $result->fetch_assoc())
+    {
+        $stock[] = $row;
+    }
+    
+    $sellStmt->close();
+
+    echo json_encode($stock);
+}
+
+if(isset($_POST['InvoiceCate']))
+{
+    $category=$conn->prepare("SELECT DISTINCT `category` FROM `stock`");
+    $category->execute();
+    $resultCat=$category->get_result();
+    $cate = array();
+    while($row1=$resultCat->fetch_assoc())
+    {
+        $cate[] = $row1;
+    }
+    $category->close();
+    echo json_encode($cate);
+}
+
 $conn->close();
 ?>
