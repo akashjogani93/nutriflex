@@ -20,7 +20,6 @@ class TabManager
 
     headerTabClick(tabId)
     {
-        console.log(tabId)
         const boxContent = document.querySelector('.box-content');
         // let content = '';
             const tableName = tabId.toUpperCase();
@@ -89,7 +88,6 @@ class TabManager
                     const slno = row.cells[0].textContent;
                     const name = row.cells[1].textContent;
                     const cat_id = row.querySelector('.edit-button').getAttribute('data-id');
-                    // console.log(slno,name,cat_id);
                     const rowData={
                         "slno":slno,
                         'name':name,
@@ -129,7 +127,6 @@ class TabManager
             const data = await response.json();
             const tbodyElement = document.getElementById(`${tabId}-tbody`);
             tbodyElement.innerHTML = '';
-            // console.log(data);
             if (tabId === 'category') 
             {
                 data.forEach(rowData => {
@@ -255,7 +252,7 @@ class TabManager
         // const submitButton = document.querySelector('.btn-info');
         if(nameInput.value=='')
         {
-            console.log('Please Fill Feilds');
+            // console.log('Please Fill Feilds');
             nameInput.style.border = '1px solid red';
             setTimeout(function() {
                 nameInput.style.border = '';
@@ -292,7 +289,6 @@ class TabManager
             error: function(error) 
             {
                 console.error('Error submitting data:', error);
-                // submitButton.disabled = false;
             }
         });
     }
@@ -381,7 +377,6 @@ class ItemTab
     fetchData()
     {
         this.dropdowns.forEach(dropdown =>{
-            // console.log(dropdown.tabId)
             $.ajax({
                 url: 'ajax/fetch_master.php',
                 type: 'GET',
@@ -390,9 +385,7 @@ class ItemTab
                 },
                 success: function (response) 
                 {
-                    // console.log(response);
                     var data = JSON.parse(response);
-                    // console.log(data)
                     var dropdownElement = $('#' + dropdown.id);
                     dropdownElement.empty();
                     dropdownElement.append($('<option>').text('Select').val(''));
@@ -435,7 +428,6 @@ class ItemTab
 
         document.getElementById('categoryFilter').addEventListener('change', function() {
             const selectedCategory = this.value;
-            console.log(selectedCategory);
             if (selectedCategory === '') 
             {
                 $('.table tr').show();
@@ -444,7 +436,6 @@ class ItemTab
                 $('.table tr').hide();
                 $('.table tr').each(function() 
                 {
-                    // console.log($(this).find('td:nth-child(2)').text()== selectedCategory);
                     if ($(this).find('td:nth-child(2)').text() === selectedCategory) {
                         $(this).show();
                     }
@@ -483,8 +474,6 @@ class ItemTab
                 const unit = row.cells[5].textContent;
                 const item_code = row.cells[6].textContent;
                 const cat_id = row.querySelector('.edit-button').getAttribute('data-id');
-                // console.log(category,product);
-
                 const rowData={
                     'slno':slno,
                     'category':category,
@@ -736,7 +725,6 @@ class vendorReg
                     });
                 }else if(check=='purchase')
                 {
-                    // console.log(response);
                     var dropdownElement = $('#venName');
                     dropdownElement.empty();
                     dropdownElement.append($('<option>').text('Select').val(''));
@@ -1198,13 +1186,10 @@ class Purchase {
                         icon: 'error',
                         title: 'Oops...',
                         text: 'Something went wrong!',
-                        // showConfirmButton: false,
-                        // timer: 1500
                       })
                 }
             }
         });
-        console.log(log);
     }
 
     viewPurchaseRecord()
@@ -1218,8 +1203,6 @@ class Purchase {
             dataType:'json',
             success: function (response) 
             {
-                // console.log(response);
-
                 const tbodyElement = document.getElementById('viewPurchaseDataTable');
                 tbodyElement.innerHTML = '';
                 response.forEach(rowData => 
@@ -1246,7 +1229,6 @@ class Purchase {
                 $('#dataTable2').show();
                 const row = event.target.closest('tr');
                 let cat_id = row.querySelector('.view-button').getAttribute('data-id');
-                // console.log(cat_id);
                 let log= $.ajax({
                     url: 'ajax/fetch_master.php',
                     type: 'GET',
@@ -1257,8 +1239,6 @@ class Purchase {
                     dataType:'json',
                     success: function (response) 
                     {
-                        console.log(response);
-        
                         const tbodyElement = document.getElementById('purchaseItems');
                         tbodyElement.innerHTML = '';
                         response.forEach((item,index)=> 
@@ -1311,8 +1291,6 @@ class Stock{
             dataType:'json',
             success: function (response) 
             {
-                console.log(response);
-
                 const tbodyElement = document.getElementById('itemTableBoady');
                 tbodyElement.innerHTML = '';
                 response.forEach((item,index)=> 
@@ -1328,7 +1306,6 @@ class Stock{
                 });
             }
         });
-        console.log(log)
     }
 }
 
@@ -1340,6 +1317,7 @@ class Invoice
     }
     initializeTabs()
     {
+        const vm=this;
         $.ajax({
             url:'ajax/fetch_master.php',
             type :'POST',
@@ -1347,7 +1325,6 @@ class Invoice
             data:{InvoiceCate:'category'},
             success: function(response)
             {
-                console.log(response);
                 var dropdownElement = $('#category');
                 dropdownElement.empty();
                 dropdownElement.append($('<option>').text('Select').val(''));
@@ -1364,6 +1341,7 @@ class Invoice
             let selectedValue = event.target.value;
             const itemCode_Id = event.target.id;
             if(!selectedValue)return;
+
             let log=$.ajax({
                 url:'ajax/fetch_master.php',
                 type :'POST',
@@ -1371,6 +1349,7 @@ class Invoice
                 data:{sellMaster:selectedValue},
                 success: function(response)
                 {
+                    $('#indeseRows').empty();
                     var dropdownElements = [
                         $('#brand'),$('#product'),$('#flavor'),$('#unit')
                     ];
@@ -1433,29 +1412,133 @@ class Invoice
                                     <input type="text" class="form-control" id="location" placeholder="location..." readonly value="${item.location}">
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="cate">Expiry Date</label>
+                                    <label for="cate">Expiry</label>
                                     <input type="date" class="form-control" id="expDate" readonly value="${item.exp}">
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-1">
                                     <label for="cate">GST %</label>
                                     <input type="text" class="form-control" id="expDate" readonly value="${item.gst}">
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-1">
                                     <label for="cate">QTY</label>
                                     <input type="text" class="form-control" id="qty" readonly value="${item.qty}">
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="cate">Mrp Price</label>
+                                    <label for="cate">MRP</label>
                                     <input type="text" class="form-control" id="salePrice" readonly value="${item.mrpprice}">
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="cate">Sale Price</label>
-                                    <input type="text" class="form-control" id="mrpPrice" readonly value="${item.saleprice}">
+                                    <label for="cate">Sale</label>
+                                    <input type="text" class="form-control" id="mrpPrice" value="${item.saleprice}">
+                                </div>
+                                <div class="col-md-1">
+                                    <label for="cate">Sale</label>
+                                    <input type="text" class="form-control" id="saleqty">
                                 </div></div>`;
                             $('#indeseRows').append(insideSell);
                     });
                 }
             });
         });
+
+
+        //onchange
+        const categories = document.querySelectorAll('#category, #brand, #product, #flavor');
+        categories.forEach(category => {
+            category.addEventListener('change', function(event) 
+            {
+                let selectedValue = event.target.value;
+                const selectId = event.target.id;
+                if(!selectedValue)return;
+                $('#indeseRows').empty();
+                vm.fetchDatas(selectedValue, selectId);
+            });
+        });
+
+
+        //unit change
+        const unit = document.getElementById('unit');
+        unit.addEventListener('change',function(event)
+        {
+            let unitvalue=event.target.value;
+            const unit_id=event.target.id;  
+            if(!unitvalue)return;
+
+            var category=$('#category').val();
+            var brand=$('#brand').val();
+            var product=$('#product').val();
+            var flavor=$('#flavor').val();
+            var unit=$('#unit').val();
+
+            var input=['#category','#brand','#product','#flavor','#unit'];
+            for(var i=0; i<input.length; i++)
+            {
+                if($(input[i]).val() == '')
+                {
+                    $(input[i]).css("border", "1px solid red");
+                    return;
+                }else
+                {
+                    $(input[i]).css("border","");
+                }
+            }
+
+            var formData= new FormData();
+            formData.append('category',category);
+            formData.append('brand',brand);
+            formData.append('product',product);
+            formData.append('flavor',flavor);
+            formData.append('unit',unit);
+            // var categoryValue = formData.get('category');
+
+            let log=$.ajax({
+                url:'ajax/fetch_master.php',
+                type: 'POST',
+                dataType: 'json',
+                data:form_data,
+                contentType: false,
+                processData: false,
+                success: function(response)
+                {
+                    console.log(response);
+                }
+            });
+        });
+
     }
+
+    fetchDatas(selectedValue,select_Id)
+    {
+        let log=$.ajax({
+            url:'ajax/fetch_master.php',
+            type :'POST',
+            dataType:'json',
+            data:{selectedValue:selectedValue,select_Id:select_Id},
+            success: function(response)
+            {
+                if(select_Id=='category')
+                {
+                    var dropdownElement= $('#brand');
+                }else if(select_Id=='brand')
+                {
+                    var dropdownElement= $('#product');
+                }
+                else if(select_Id=='product')
+                {
+                    var dropdownElement= $('#flavor');
+                }
+                else if(select_Id=='flavor')
+                {
+                    var dropdownElement= $('#unit');
+                }
+                dropdownElement.empty();
+                dropdownElement.append($('<option>').text('Select').val(''));
+                $.each(response, function (index, item)
+                {
+                    dropdownElement.append($('<option>').text(item.name).val(item.name));
+                });
+            }
+        });
+    }   
+
 }

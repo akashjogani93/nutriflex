@@ -267,5 +267,50 @@ if(isset($_POST['InvoiceCate']))
     echo json_encode($cate);
 }
 
+
+
+
+if(isset($_POST['selectedValue']) && isset($_POST['select_Id']))
+{
+    $selectValue=$_POST['selectedValue'];
+    $select_Id=$_POST['select_Id'];
+
+    if($select_Id=='category')
+    {
+        $name='brand';
+        $coloum='category';
+    }else if($select_Id=='brand')
+    {
+        $name='product';
+        $coloum='brand';
+    }
+    else if($select_Id=='product')
+    {
+        $name='flavor';
+        $coloum='product';
+    }
+    else if($select_Id=='flavor')
+    {
+        $name='unit';
+        $coloum='flavor';
+    }
+
+    $fetchStmt=$conn->prepare("SELECT DISTINCT $name  AS `name` FROM `stock` WHERE $coloum = ?");
+    $fetchStmt->bind_param("s",$selectValue);
+    $fetchStmt->execute();
+    $resultCat=$fetchStmt->get_result();
+    $data = array();
+    while($row1=$resultCat->fetch_assoc())
+    {
+        $data[] = $row1;
+    }
+    $fetchStmt->close();
+    echo json_encode($data);
+}
+
+if(isset($_POST['category']))
+{
+    
+}
 $conn->close();
 ?>
