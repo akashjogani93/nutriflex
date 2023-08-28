@@ -31,7 +31,7 @@
                     <h6 class="box-header-names">View INVOICE</h6>
                 </div>
             </div>
-            <div class="box-content" id="addPurchaseData">
+            <div class="box-content" id="addsellData">
                 <div class="container-fluid adding-category">
                     <div class="row">
                         <div class="col-md-2">
@@ -83,92 +83,8 @@
                         </div>
                     </div>
                     <div id="indeseRows">
-                        <!-- <div class="col-md-2">
-                            <label for="cate">Select Location</label>
-                            <input type="text" class="form-control" id="location" placeholder="location..." readonly>
-                        </div>
-                        <div class="col-md-2">
-                            <label for="cate">Expiry Date</label>
-                            <input type="date" class="form-control" id="expDate" readonly>
-                        </div>
-                        <div class="col-md-2">
-                            <label for="cate">GST %</label>
-                            <input type="text" class="form-control" id="expDate" readonly>
-                        </div>
-                        <div class="col-md-2">
-                            <label for="cate">QTY</label>
-                            <input type="text" class="form-control" id="qty" readonly>
-                        </div>
-                        <div class="col-md-2">
-                            <label for="cate">Mrp Price</label>
-                            <input type="text" class="form-control" id="salePrice" readonly>
-                        </div>
-                        <div class="col-md-2">
-                            <label for="cate">Sale Price</label>
-                            <input type="text" class="form-control" id="mrpPrice" readonly>
-                        </div> -->
                     </div>
-                    <!-- <div class="row">
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="cate">Select Location</label>
-                                <select class="form-control" id="location">
-                                    <option value="">Select location</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                            <label for="cate">Expiry Date</label>
-                                <input type="date" name="expDate" id="expDate" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <label for="cate">GST%</label>
-                                <select class="form-control" id="gst">
-                                    <option value="">Select location</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <label for="cate">QTY</label>
-                                <input type="text" class="form-control" id="qty">
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="cate">Price</label>
-                                <input type="text" class="form-control" id="price">
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="cate">Gst-Price</label>
-                                <input type="text" class="form-control" id="gstPer" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="cate">Base-Price</label>
-                                <input type="text" class="form-control" id="basePer" readonly>
-                            </div>
-                        </div>
-                    </div> -->
                     <div class="row">
-                        <!-- <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="cate">mrp</label>
-                                <input type="text" class="form-control" id="mrpPrice">
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="cate">SalePrice</label>
-                                <input type="text" class="form-control" id="salePrice">
-                            </div>
-                        </div> -->
                         <div class="col-md-2">
                             <div class="form-group">
                                 <button class="btn btn-info" id="addPurchaseItem" style="margin-top:30px; border-radius: 0;">ADD ITEM</button>
@@ -190,20 +106,20 @@
                                     <thead>
                                         <tr>
                                             <th>SL.NO</th>
-                                            <th>Category-Brand-Product-Flavor</th>
-                                            <th>Unit</th>
+                                            <th>Category-Brand-Product-Flavor-Unit</th>
                                             <th>GST</th>
                                             <th>Qty</th>
-                                            <th>Gst/Price</th>
-                                            <th>Base/Price</th>
-                                            <th>MRP</th>
-                                            <th>Sale/Price</th>
+                                            <th>Rate</th>
+                                            <th>Amount</th>
+                                            <th>GST Amount</th>
+                                            <!-- <th>SGST</th>
+                                            <th>CGST</th>
+                                            <th>IGST</th> -->
                                             <th>Total</th>
-                                            <th>Expiry</th>
                                             <th>DELETE</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="itemTableBoady">
+                                    <tbody id="saleTableBoady">
                                         
                                     </tbody>
                                 </table>
@@ -216,16 +132,14 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="cate">Select Vendor</label>
-                                <select name="venName" id="venName" class="form-control">
-                                    <option value="">Select Vendor</option>
-                                </select>
+                                <label for="cate">Customer Name</label>
+                                <input type="text" name="custName" id="custName" class="form-control">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
-                            <label for="cate">Purchase Date</label>
-                                <input type="date" name="purDate" id="purDate" class="form-control">
+                            <label for="cate">Invoice Date</label>
+                                <input type="date" name="saleDate" id="saleDate" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -235,9 +149,81 @@
                             </div>
                         </div>
                         <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="cate">GST SELECT</label>
+                                <select class="form-control" id="gstsel">
+                                    <option value="">Select Gst</option>
+                                    <option value="igst">IGST</option>
+                                    <option value="gst">GST</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="cate">Payment Mode</label>
+                                <select class="form-control" id="pay">
+                                    <option value="">Select Mode</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="online">Online</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
                             <div class="form-group" style="display:flex;">
-                                <button class="btn btn-info" id="submitPurchase" style="margin-top:30px; border-radius: 0; margin-right:5px;">PURCHASE</button>
-                                <button class="btn btn-danger" id="cancelPurchase" style="margin-top:30px; border-radius: 0;">CANCEL</button>
+                                <button class="btn btn-info" id="submitinvoice" style="border-radius: 0; margin-right:5px;">Invoice</button>
+                                <button class="btn btn-danger" id="cancelPurchase" style="border-radius: 0;">CANCEL</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-content" id="viewsellData" style="display:none;">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-container">
+                                <table id="dataTable1"  class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Invoice No</th>
+                                            <th>Customer Name</th>
+                                            <th>Invoice Date</th>
+                                            <th>Payment Mode</th>
+                                            <th>Total Amount</th>
+                                            <th>View</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="viewSaleDataTable">
+                                        
+                                    </tbody>
+                                </table>
+                                <table id="dataTable2"  class="table table-bordered" style="display:none">
+                                    <thead>
+                                        <tr><th colspan="12"><button class="btn btn-sm btn-primary back-button">Back</button></th></tr>
+                                        <tr>
+                                            <th>SL.NO</th>
+                                            <th>Category-Brand-Product-Flavor-unit</th>
+                                            <th>GST</th>
+                                            <th>Qty</th>
+                                            <th>Rate</th>
+                                            <th>Amount</th>
+                                            <th>CGST</th>
+                                            <th>SGST</th>
+                                            <th>IGST</th>
+                                            <th>TOTAL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="saleItems">
+                                        
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="10" id="totalSaleAmount" class="text-center">TOTAL AMOUNT- </th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
                             </div>
                         </div>
                     </div>

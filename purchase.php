@@ -33,16 +33,6 @@
             </div>
             <div class="box-content" id="addPurchaseData">
                 <div class="container-fluid adding-category">
-                    <!-- <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="cate">Select Vendor</label>
-                                <select name="venName" id="venName" class="form-control onchange">
-                                    <option value="">Select Vendor</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div> -->
                     <div class="row">
                         <div class="col-md-2">
                             <div class="form-group">

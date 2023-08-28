@@ -354,6 +354,10 @@ class HeaderTab
         {
           this.navigateToPage("sell.php");
         }
+        else if(tabId === "profit") 
+        {
+          this.navigateToPage("profit.php");
+        }
     }
     navigateToPage(pageUrl)
     {
@@ -829,6 +833,7 @@ class Purchase {
             });
         });
 
+        //categeroy and gst 
         this.dropdowns.forEach(dropdown =>{
             $.ajax({
                 url: 'ajax/fetch_master.php',
@@ -859,15 +864,29 @@ class Purchase {
             });
         });
         
-        const selectElements = document.querySelectorAll('.onchange');
-        selectElements.forEach(function (element) 
-        {
-            element.addEventListener('change', function (event)
+        // const selectElements = document.querySelectorAll('.onchange');
+        // selectElements.forEach(function (element) 
+        // {
+        //     element.addEventListener('change', function (event)
+        //     {
+        //         const selectedValue = event.target.value;
+        //         const categoryId = event.target.id;
+        //         const status=0;
+        //         if(!selectedValue){return;}
+        //         vm.fetchAllData(selectedValue, categoryId,status);
+        //     });
+        // });
+
+        //onchange
+        const categories = document.querySelectorAll('#category, #brand, #product, #flavor, #unit');
+        categories.forEach(category => {
+            category.addEventListener('change', function(event)
             {
-                const selectedValue = event.target.value;
+                let selectedValue = event.target.value;
                 const categoryId = event.target.id;
                 const status=0;
-                if(!selectedValue){return;}
+                // console.log(selectedValue,categoryId);
+                if(!selectedValue)return;
                 vm.fetchAllData(selectedValue, categoryId,status);
             });
         });
@@ -875,7 +894,7 @@ class Purchase {
         const item_code = document.getElementById('item_code');
         item_code.addEventListener('input',function (event)
         {
-            const selectedValue = event.target.value;
+            let selectedValue = event.target.value;
             const categoryId = event.target.id;
             const status=1;
             if(!selectedValue){return;}
@@ -912,7 +931,6 @@ class Purchase {
             vm.priceCalculation(totalPriceValue,gst,qty)
         });
 
-
         $('#qty, #price, #mrpPrice, #salePrice').keypress(function(event)
         {
             var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -935,71 +953,161 @@ class Purchase {
 
     fetchAllData(selectedValue, categoryId,status)
     {
-        let log=$.ajax({
-            url: 'ajax/fetch_master.php',
-            type: 'GET',
-            data: {
-                purchase1: selectedValue,
-                inputElement:categoryId
-            },
-            success: function (response1) 
-            {
-                var data1 = JSON.parse(response1);
-                if(categoryId=='category')
-                {
-                    var dropdownElement = $('#brand');
-                }else if(categoryId=='brand')
-                {
-                    var dropdownElement = $('#product');
-                }else if(categoryId=='product')
-                {
-                    var dropdownElement = $('#flavor');
-                }
-                else if(categoryId=='flavor')
-                {
-                    var dropdownElement = $('#unit');
-                } 
-                
-                if(categoryId !='unit' && categoryId !='item_code')
-                {
-                    dropdownElement.empty();
-                    dropdownElement.append($('<option>').text('Select').val(''));
-                }
+        var category= $('#category').val();
+        var brand=$('#brand').val();
+        var product= $('#product').val();
+        var flavor= $('#flavor').val();
+        var unit= $('#unit').val();
 
-                $.each(data1, function (index, item) 
+        var formData = new FormData();
+        formData.append('id1', categoryId);
+        $('#item_code').val('');
+        if (categoryId == 'category') 
+        {
+            formData.append('category1', selectedValue);
+        }
+        else if (categoryId == 'brand')
+        {
+            formData.append('category1', category);
+            formData.append('brand1', selectedValue);
+        }
+        else if(categoryId=='product')
+        {
+            formData.append('category1', category);
+            formData.append('brand1', brand);
+            formData.append('product1', selectedValue);
+        }
+        else if(categoryId=='flavor')
+        {
+            formData.append('category1', category);
+            formData.append('brand1', brand);
+            formData.append('product1', product);
+            formData.append('flavor1', selectedValue);
+        }
+        else if(categoryId=='unit')
+        {
+            formData.append('category1', category);
+            formData.append('brand1', brand);
+            formData.append('product1', product);
+            formData.append('flavor1', flavor);
+            formData.append('unit1', selectedValue);
+
+            var input=['#category','#brand','#product','#flavor','#unit'];
+            for(var i=0; i<input.length; i++)
+            {
+                if($(input[i]).val() == '')
                 {
-                    if(categoryId=='category')
+                    $(input[i]).css("border", "1px solid red");
+                    return;
+                }else
+                {
+                    $(input[i]).css("border","");
+                }
+            }
+        }else if(categoryId=='item_code')
+        {
+            $('#item_code').val(selectedValue);
+            formData.append('item_code1', selectedValue);
+        }
+        let log=$.ajax({
+            url:'ajax/fetch_master.php',
+            type :'POST',
+            dataType:'json',
+            data:formData,
+            contentType: false,
+            processData: false,
+            success: function(response)
+            {
+                if(status==0)
+                {
+                    if (categoryId == 'category') 
                     {
-                        dropdownElement.append($('<option>').text(item.brand).val(item.brand));
+                        var dropdownElement= $('#brand');
                     }
-                    else if(categoryId=='brand')
+                    else if (categoryId == 'brand')
                     {
-                        dropdownElement.append($('<option>').text(item.product).val(item.product));
-                    }else if(categoryId=='product')
+                        var dropdownElement= $('#product');
+                    }
+                    else if(categoryId=='product')
                     {
-                        dropdownElement.append($('<option>').text(item.flavor).val(item.flavor));
+                        var dropdownElement= $('#flavor');
                     }else if(categoryId=='flavor')
                     {
-                        dropdownElement.append($('<option>').text(item.unit).val(item.unit));
+                        var dropdownElement= $('#unit');
                     }
                     else if(categoryId=='unit')
                     {
-                        $('#item_code').val(item.item_code);
-                    }else if(categoryId=='item_code')
-                    {
-                        $('#category').val(item.category);
-                        $('#brand').append($('<option>').text(item.brand).val(item.brand));
-                        $('#product').append($('<option>').text(item.product).val(item.product));
-                        $('#flavor').append($('<option>').text(item.flavor).val(item.flavor));
-                        $('#unit').append($('<option>').text(item.unit).val(item.unit));
-                        $('#brand').val(item.brand);
-                        $('#product').val(item.product);
-                        $('#flavor').val(item.flavor);
-                        $('#unit').val(item.unit);
+                        $.each(response, function (index, item)
+                        {
+                            $('#item_code').val(item.name);
+                            return;
+                        });
+                        return;
                     }
-                });
+                    dropdownElement.empty();
+                    dropdownElement.append($('<option>').text('Select').val(''));
+
+                    $.each(response, function (index, item)
+                    {
+                        dropdownElement.append($('<option>').text(item.name).val(item.name));
+                    });
+                }
+                else if(status==1)
+                {
+                    // console.log(status);
+                    var dropdownElements = [
+                        $('#brand'),$('#product'),$('#flavor'),$('#unit'),$('#category')
+                    ];
+                    for(var i=0;i<dropdownElements.length;i++)
+                    {
+                        var dropdownElement=dropdownElements[i];
+                        if(i!=4)
+                        {
+                            dropdownElement.empty();
+                        }
+                        var checkDuplicate = {};
+
+                        $.each(response, function (index, item)
+                        {
+                            if(i==0)
+                            {
+                                if (!checkDuplicate[item.brand])
+                                {
+                                    checkDuplicate[item.brand] = true;
+                                    dropdownElement.append($('<option>').text(item.brand).val(item.brand));
+                                }
+                            }else if(i==1)
+                            {
+                                if (!checkDuplicate[item.product]) 
+                                {
+                                    checkDuplicate[item.product] = true;
+                                    dropdownElement.append($('<option>').text(item.product).val(item.product));
+                                }
+                            }else if(i==2)
+                            {
+                                if (!checkDuplicate[item.flavor]) 
+                                {
+                                    checkDuplicate[item.flavor] = true;
+                                    dropdownElement.append($('<option>').text(item.flavor).val(item.flavor));
+                                }
+                            }
+                            else if(i==3)
+                            {
+                                if (!checkDuplicate[item.unit]) 
+                                {
+                                    checkDuplicate[item.unit] = true;
+                                    dropdownElement.append($('<option>').text(item.unit).val(item.unit));
+                                }
+                            }else if(i==4)
+                            {
+                                $('#category').val(item.category);
+                            }
+                        });
+                    }
+                }
             }
         });
+        // console.log(log);
     }
     priceCalculation(totalPriceValue,gst,qty)
     {
@@ -1132,7 +1240,7 @@ class Purchase {
 
     submitData()
     {
-        const vm=this;
+        let vm=this;
         let venName=$('#venName').val();
         let purDate=$('#purDate').val();
         let totalAmt=$('#totalAmt').val();
@@ -1167,8 +1275,6 @@ class Purchase {
                         position: 'top-end',
                         icon: 'success',
                         title: response.message,
-                        // showConfirmButton: false,
-                        // timer: 1500
                       })
                     for(var i=0;i<input.length;i++)
                     {
@@ -1178,6 +1284,9 @@ class Purchase {
                         }
                     }
                     localStorage.removeItem('items');
+                    const tableBody = document.getElementById('itemTableBoady');
+                    let totalAmount = 0;
+                    tableBody.innerHTML = '';
                     vm.fetchItems();
                 }else
                 {
@@ -1335,6 +1444,29 @@ class Invoice
             }
         });
 
+        const tabElements = document.querySelectorAll('.cat');
+        tabElements.forEach(tabName => {
+            tabName.addEventListener('click', () => {
+                tabElements.forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                tabName.classList.add('active');
+                if(tabName.id=='viewInv')
+                {   
+                    $('#addsellData').hide();
+                    $('#viewsellData').show();
+                    vm.viewInvoiceRecord();
+                }else if(tabName.id=='addSell')
+                {
+                    $('#viewsellData').hide();
+                    $('#addsellData').show();
+                }
+            });
+        });
+
+        //below table datafetch Data;
+        vm.fetchItems();
+
         const itemCode=document.getElementById('item_code');
         itemCode.addEventListener('input',function(event)
         {
@@ -1410,31 +1542,38 @@ class Invoice
                          insideSell=`<div class="row"> <div class="col-md-2">
                                     <label for="cate">Location</label>
                                     <input type="text" class="form-control" id="location" placeholder="location..." readonly value="${item.location}">
+                                    <input type="hidden" class="id" id="id" value="${item.id}">
+                                    <input type="hidden" class="basepur" id="basepur" value="${item.baseprice}">
                                 </div>
                                 <div class="col-md-2">
                                     <label for="cate">Expiry</label>
-                                    <input type="date" class="form-control" id="expDate" readonly value="${item.exp}">
+                                    <input type="date" class="form-control expDate" id="expDate" readonly value="${item.exp}">
                                 </div>
                                 <div class="col-md-1">
                                     <label for="cate">GST %</label>
-                                    <input type="text" class="form-control" id="expDate" readonly value="${item.gst}">
+                                    <input type="text" class="form-control gst" id="gst" readonly value="${item.gst}">
                                 </div>
                                 <div class="col-md-1">
                                     <label for="cate">QTY</label>
-                                    <input type="text" class="form-control" id="qty" readonly value="${item.qty}">
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="cate">MRP</label>
-                                    <input type="text" class="form-control" id="salePrice" readonly value="${item.mrpprice}">
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="cate">Sale</label>
-                                    <input type="text" class="form-control" id="mrpPrice" value="${item.saleprice}">
+                                    <input type="text" class="form-control qty" id="qty" readonly value="${item.qty}">
                                 </div>
                                 <div class="col-md-1">
+                                    <label for="cate">MRP</label>
+                                    <input type="text" class="form-control mrpPrice" id="mrpPrice" readonly value="${item.mrpprice}">
+                                </div>
+                                <div class="col-md-2">
                                     <label for="cate">Sale</label>
-                                    <input type="text" class="form-control" id="saleqty">
-                                </div></div>`;
+                                    <input type="text" class="form-control salePrice" id="salePrice" value="${item.saleprice}">
+                                </div>
+                                <div class="col-md-1">
+                                    <label for="cate">Sale Qty</label>
+                                    <input type="text" class="form-control saleqty" id="saleqty">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="cate">Total</label>
+                                    <input type="text" class="form-control total" id="total" readonly>
+                                </div>
+                                </div>`;
                             $('#indeseRows').append(insideSell);
                     });
                 }
@@ -1443,7 +1582,7 @@ class Invoice
 
 
         //onchange
-        const categories = document.querySelectorAll('#category, #brand, #product, #flavor');
+        const categories = document.querySelectorAll('#category, #brand, #product, #flavor, #unit');
         categories.forEach(category => {
             category.addEventListener('change', function(event) 
             {
@@ -1455,20 +1594,206 @@ class Invoice
             });
         });
 
-
-        //unit change
-        const unit = document.getElementById('unit');
-        unit.addEventListener('change',function(event)
+        //add to sell
+        const sell = document.getElementById('addPurchaseItem');
+        sell.addEventListener('click',function(event)
         {
-            let unitvalue=event.target.value;
-            const unit_id=event.target.id;  
-            if(!unitvalue)return;
+            var input=['#item_code','#category','#brand','#product','#flavor','#unit'];
+            for(var i=0; i<input.length; i++)
+            {
+                if($(input[i]).val() == '')
+                {
+                    $(input[i]).css("border", "1px solid red");
+                    return;
+                }else
+                {
+                    $(input[i]).css("border","");
+                }
+            }
 
+            let category=$('#category').val();
+            let brand=$('#brand').val();
+            let product=$('#product').val();
+            let flavor=$('#flavor').val();
+            let unit=$('#unit').val();
+            let item_code=$('#item_code').val();
+            const rowContainers = $('#indeseRows .row');
+            const saleItems = [];
+            if(rowContainers.length > 0) 
+            {
+                rowContainers.each(function(index, row) 
+                {
+                    
+                    const stockid = $(row).find('#id').val();
+                    const location = $(row).find('#location').val();
+                    const expDate = $(row).find('#expDate').val();
+                    let gst = $(row).find('#gst').val();
+                    let qty = $(row).find('#qty').val();
+                    const salePrice = $(row).find('#salePrice').val();
+                    let mrpPrice = $(row).find('#mrpPrice').val();
+                    const saleQty = $(row).find('#saleqty').val();
+                    let total = $(row).find('#total').val();
+                    let basepur = $(row).find('#basepur').val();
+                    // console.log(location, expDate, gst, qty, salePrice, mrpPrice, saleQty);
+                    
+                    
+                    if (saleQty !== '')
+                    {
+                        total=parseFloat(total);
+                        gst=parseFloat(gst);
+                        mrpPrice=parseFloat(mrpPrice);
+                        let saleQty1=parseFloat(saleQty);
+                        qty=parseFloat(qty);
+
+                        let gstmain=(gst/100)+1;
+                        let BAseAmount=total/gstmain;
+                        let gstAmount=total-BAseAmount;
+                        let perItem=BAseAmount/saleQty1;
+
+                        const newItem = 
+                        {
+                            category:category,
+                            brand:brand,
+                            product:product,
+                            flavor:flavor,
+                            unit:unit,
+                            stockid: stockid,
+                            gst: gst,
+                            saleQty: saleQty1,
+                            perItem: perItem.toFixed(2),
+                            BAseAmount:BAseAmount.toFixed(2),
+                            gstAmount:gstAmount.toFixed(2),
+                            mrpPrice:mrpPrice.toFixed(2),
+                            total:total.toFixed(2),
+                            oldqty:qty,
+                            basepur:basepur,
+                            item_code:item_code
+                        };
+
+                        const existingSaleItems = JSON.parse(localStorage.getItem('saleItems')) || [];
+                        console.log('Existing Sale Items:', existingSaleItems);
+                    
+                        const itemAlreadyExists = existingSaleItems.some(item => item.stockid === stockid);
+                        if (itemAlreadyExists) 
+                        {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Item Already Added!',
+                            })
+                            return;
+                        }else
+                        {
+                            saleItems.push(newItem);
+                        }
+                    }
+                });
+
+                const existingSaleItems = JSON.parse(localStorage.getItem('saleItems')) || [];
+                existingSaleItems.push(...saleItems);
+                if(existingSaleItems.length > 0) 
+                {
+
+                    localStorage.setItem('saleItems', JSON.stringify(existingSaleItems));
+                    console.log(saleItems);
+                    vm.fetchItems();
+                }
+
+                for(var i=0; i<input.length; i++)
+                {
+                    $(input[i]).val('');
+                }
+                $('#indeseRows').empty();
+            }else 
+            {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something Went Wrong!',
+                })
+                return;
+            }
+        });
+
+        //do not take saleqty more that stock qty and multiply saleqty in into sale price
+        $(document).on('input', '.saleqty', function() 
+        {
+            var saleInput = $(this);
+            var saleQty = parseFloat(saleInput.val());
+            var parentRow = saleInput.closest('.row');
+            var availableQty = parseFloat(parentRow.find('.qty').val());
+            var salePrice = parseFloat(parentRow.find('.salePrice').val());
+            var totalInput = parentRow.find('.total');
+        
+            if (saleQty > availableQty) {
+                saleInput.val(availableQty);
+                saleQty = availableQty;
+            }
+        
+            var total = saleQty * salePrice;
+            totalInput.val(total);
+        });
+
+        //if saleprice change then change rate
+        $(document).on('input','.salePrice', function()
+        {
+            var salePriceINPUT = $(this);
+            var salePrice = parseFloat(salePriceINPUT.val());
+            var parentRow=salePriceINPUT.closest('.row');
+            var availableQty = parseFloat(parentRow.find('.qty').val());
+            var totalInput = parentRow.find('.total');
+
+            var total=salePrice * availableQty;
+            totalInput.val(total);
+        }); 
+
+
+        //invoice button click
+        const invoice=document.getElementById('submitinvoice');
+        invoice.addEventListener('click',function(event)
+        {
+            vm.InvoiceData();
+        });
+    }
+
+    fetchDatas(selectedValue,select_Id)
+    {
+        let vm=this;
+        var formData = new FormData();
+        formData.append('id', select_Id);
+        $('#item_code').val('');
+        if (select_Id == 'category') 
+        {
+            formData.append('category', selectedValue);
+        }else if (select_Id == 'brand')
+        {
+            var category= $('#category').val();
+            formData.append('category', category);
+            formData.append('brand', selectedValue);
+        }else if(select_Id=='product')
+        {
+            var category= $('#category').val();
+            var brand= $('#brand').val();
+            formData.append('category', category);
+            formData.append('brand', brand);
+            formData.append('product', selectedValue);
+        }else if(select_Id=='flavor')
+        {
+            var category= $('#category').val();
+            var brand= $('#brand').val();
+            var product= $('#product').val();
+            formData.append('category', category);
+            formData.append('brand', brand);
+            formData.append('product', product);
+            formData.append('flavor', selectedValue);
+        }else if(select_Id=='unit')
+        {
             var category=$('#category').val();
             var brand=$('#brand').val();
             var product=$('#product').val();
             var flavor=$('#flavor').val();
-            var unit=$('#unit').val();
 
             var input=['#category','#brand','#product','#flavor','#unit'];
             for(var i=0; i<input.length; i++)
@@ -1483,43 +1808,27 @@ class Invoice
                 }
             }
 
-            var formData= new FormData();
-            formData.append('category',category);
-            formData.append('brand',brand);
-            formData.append('product',product);
-            formData.append('flavor',flavor);
-            formData.append('unit',unit);
-            // var categoryValue = formData.get('category');
+            formData.append('category', category);
+            formData.append('brand', brand);
+            formData.append('product', product);
+            formData.append('flavor', flavor);
+            formData.append('unit', selectedValue);
+        }
 
-            let log=$.ajax({
-                url:'ajax/fetch_master.php',
-                type: 'POST',
-                dataType: 'json',
-                data:form_data,
-                contentType: false,
-                processData: false,
-                success: function(response)
-                {
-                    console.log(response);
-                }
-            });
-        });
-
-    }
-
-    fetchDatas(selectedValue,select_Id)
-    {
         let log=$.ajax({
             url:'ajax/fetch_master.php',
             type :'POST',
             dataType:'json',
-            data:{selectedValue:selectedValue,select_Id:select_Id},
+            data:formData,
+            contentType: false,
+            processData: false,
             success: function(response)
             {
                 if(select_Id=='category')
                 {
                     var dropdownElement= $('#brand');
-                }else if(select_Id=='brand')
+                }
+                else if(select_Id=='brand')
                 {
                     var dropdownElement= $('#product');
                 }
@@ -1531,6 +1840,13 @@ class Invoice
                 {
                     var dropdownElement= $('#unit');
                 }
+                else if(select_Id=='unit')
+                {
+                    var item_code=response[0].name;
+                    $('#item_code').val(item_code);
+                    vm.loadAdjuctData(item_code);
+                    return;
+                }
                 dropdownElement.empty();
                 dropdownElement.append($('<option>').text('Select').val(''));
                 $.each(response, function (index, item)
@@ -1539,6 +1855,303 @@ class Invoice
                 });
             }
         });
-    }   
+        // console.log(log);
+    }
+    loadAdjuctData(response)
+    {
+        let log=$.ajax({
+            url:'ajax/fetch_master.php',
+            type :'POST',
+            dataType:'json',
+            data:{sellMaster:response},
+            success: function(status)
+            {
+                $('#indeseRows').empty();
+                var insideSell='';
+                status.forEach((item,index)=> 
+                {
+                    $('#category').val(item.category);
+                        insideSell=`<div class="row"> <div class="col-md-2">
+                                <label for="cate">Location</label>
+                                <input type="text" class="form-control" id="location" placeholder="location..." readonly value="${item.location}">
+                                <input type="hidden" class="id" id="id" value="${item.id}">
+                                <input type="hidden" class="basepur" id="basepur" value="${item.baseprice}">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="cate">Expiry</label>
+                                <input type="date" class="form-control expDate" id="expDate" readonly value="${item.exp}">
+                            </div>
+                            <div class="col-md-1">
+                                <label for="cate">GST %</label>
+                                <input type="text" class="form-control gst" id="gst" readonly value="${item.gst}">
+                            </div>
+                            <div class="col-md-1">
+                                <label for="cate">QTY</label>
+                                <input type="text" class="form-control qty" id="qty" readonly value="${item.qty}">
+                            </div>
+                            <div class="col-md-1">
+                                <label for="cate">MRP</label>
+                                <input type="text" class="form-control mrpPrice" id="mrpPrice" readonly value="${item.mrpprice}">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="cate">Sale</label>
+                                <input type="text" class="form-control salePrice" id="salePrice" value="${item.saleprice}">
+                            </div>
+                            <div class="col-md-1">
+                                <label for="cate">SaleQTY</label>
+                                <input type="text" class="form-control saleqty" id="saleqty">
+                            </div>
+                            <div class="col-md-2">
+                                    <label for="cate">Total</label>
+                                    <input type="text" class="form-control total" id="total" readonly>
+                                </div>
+                            </div>`;
+                            $('#indeseRows').append(insideSell);
+                    });
+            }
+        });
+    }
+    fetchItems()
+    {
+        const vm=this;
+        const items = JSON.parse(localStorage.getItem('saleItems'));
+        console.log(items);
+        if (items !== null && Array.isArray(items))
+        {
+            const tableBody = document.getElementById('saleTableBoady');
+            let totalAmount = 0;
+            tableBody.innerHTML = '';
+        
+            items.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${item.category} - ${item.brand} - ${item.product} - ${item.flavor} - ${item.unit}</td>
+                    <td>${item.gst}</td>
+                    <td>${item.saleQty}</td>
+                    <td>${item.perItem}</td>
+                    <td>${item.BAseAmount}</td>
+                    <td>${item.gstAmount}</td>
+                    <td>${item.total}</td>
+                    <td><button class="btn btn-danger delete-button" data-index="${index}">Delete</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
 
+            items.forEach(item => {
+                totalAmount += parseFloat(item.total); // Assuming "mrp" is a numeric value
+            });
+            const totalAmt = document.getElementById('totalAmt').value=totalAmount;
+        }
+
+        //delete data in table;
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('delete-button')) {
+                const dataIndex = event.target.getAttribute('data-index');
+                
+                // Remove the item from items array
+                items.splice(dataIndex, 1);
+                
+                // Update local storage
+                localStorage.setItem('saleItems', JSON.stringify(items));
+                
+                // Re-render the table
+                vm.fetchItems();
+            }
+        });
+    }
+    InvoiceData()
+    {
+        const vm=this;
+        var input=['#custName','#saleDate','#totalAmt','#gstsel','#pay'];
+        for(var i=0; i<input.length; i++)
+        {
+            if($(input[i]).val() == '')
+            {
+                $(input[i]).css("border", "1px solid red");
+                return;
+            }else
+            {
+                $(input[i]).css("border","");
+            }
+        }
+
+
+        let custName=$('#custName').val();
+        let saleDate=$('#saleDate').val();
+        let totalAmt=$('#totalAmt').val();
+        let gstsel=$('#gstsel').val();
+        let pay=$('#pay').val();
+
+        let items = JSON.parse(localStorage.getItem('saleItems'));
+
+        let log=$.ajax({
+            url:'ajax/submit_master.php',
+            type:'post',
+            dataType:'json',
+            data:{
+                custName:custName,
+                saleDate:saleDate,
+                totalAmt:totalAmt,
+                saleitemList :items,
+                gstsel:gstsel,
+                pay:pay
+            },
+            success: function(response)
+            {
+                console.log(response);
+                console.log(response.message);
+                if(response.message=="Submited successfully..")
+                {
+                    localStorage.removeItem('saleItems');
+                    const tableBody = document.getElementById('saleTableBoady');
+                    tableBody.innerHTML = '';
+                    vm.fetchItems();
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        text: 'Submited successfully..',
+                    })
+                    return;
+
+                }else
+                {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something Went Wrong!',
+                    })
+                    return;
+                }
+                
+            }
+        });
+        // console.log(log);
+    }
+    viewInvoiceRecord()
+    {
+        let log= $.ajax({
+            url: 'ajax/fetch_master.php',
+            type: 'GET',
+            data: {
+                invoiceRecord:'invoiceRecord',
+            },
+            dataType:'json',
+            success: function (response) 
+            {
+                const tbodyElement = document.getElementById('viewSaleDataTable');
+                tbodyElement.innerHTML = '';
+                response.forEach(rowData => 
+                {
+                    const rowHTML = `<tr>
+                                        <td>${rowData.id}</td>
+                                        <td>${rowData.custName}</td>
+                                        <td>${rowData.date}</td>
+                                        <td>${rowData.payMode}</td>
+                                        <td>${rowData.totalAmt}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary view-button" data-id="${rowData.id}">View</button>
+                                        </td>
+                                    </tr>`;
+                        tbodyElement.innerHTML += rowHTML;
+                });
+            }
+        });
+
+        document.addEventListener('click', event => 
+        {
+            if(event.target.classList.contains('view-button'))
+            {
+                $('#dataTable1').hide();
+                $('#dataTable2').show();
+                const row = event.target.closest('tr');
+                let cat_id = row.querySelector('.view-button').getAttribute('data-id');
+                let log= $.ajax({
+                    url: 'ajax/fetch_master.php',
+                    type: 'GET',
+                    data: {
+                        invoiceRecordItem:'invoiceRecordItem',
+                        inv_id:cat_id,
+                    },
+                    dataType:'json',
+                    success: function (response) 
+                    {
+                        const tbodyElement = document.getElementById('saleItems');
+                        tbodyElement.innerHTML = '';
+                        var totalAmount=0;
+                        response.forEach((item,index)=> 
+                        {
+                            const rowHTML = `<tr>
+                                                <td>${index + 1}</td>
+                                                <td>${item.category} - ${item.brand} - ${item.product} - ${item.flavor} - ${item.unit}</td>
+                                                <td>${item.gst}</td>
+                                                <td>${item.qty}</td>
+                                                <td>${item.rate}</td>
+                                                <td>${item.amount}</td>
+                                                <td>${item.sgst}</td>
+                                                <td>${item.cgst}</td>
+                                                <td>${item.igst}</td>
+                                                <td>${item.totalAmount}</td>
+                                            </tr>`;
+                                tbodyElement.innerHTML += rowHTML;
+                        });
+                        response.forEach(item => {
+                            totalAmount += parseFloat(item.totalAmount);
+                        });
+                        console.log(totalAmount);
+                        const totalAmtElement = document.getElementById('totalSaleAmount');
+                        totalAmtElement.textContent = `TOTAL AMOUNT - ${totalAmount}`;
+                    }
+                });
+
+            }
+        });
+        document.addEventListener('click', event => 
+        {
+            if(event.target.classList.contains('back-button'))
+            {
+                $('#dataTable2').hide();
+                $('#dataTable1').show();
+
+            }
+        });
+    }
+}
+
+class Profit
+{
+    fetchProfitTable()
+    {
+        let log= $.ajax({
+            url: 'ajax/fetch_master.php',
+            type: 'GET',
+            data: {
+                profit:'profit',
+            },
+            dataType:'json',
+            success: function (response) 
+            {
+                console.log(response);
+                const tbodyElement = document.getElementById('profitTable');
+                tbodyElement.innerHTML = '';
+                response.forEach((item,index)=> 
+                {
+                    const rowHTML = `<tr>
+                                        <td>${index + 1}</td>
+                                        <td>${item.item_code}</td>
+                                        <td>${item.product}</td>
+                                        <td>${item.basePur}</td>
+                                        <td>${item.baseSale}</td>
+                                        <td>${item.profitPer}</td>
+                                        <td>${item.qty}</td>
+                                        <td>${item.totalProfit}</td>
+                                        <td>${item.invoice_id}</td>
+                                    </tr>`;
+                        tbodyElement.innerHTML += rowHTML;
+                });
+            }
+        });
+        console.log(log)
+    }
 }

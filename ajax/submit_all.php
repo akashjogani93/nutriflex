@@ -531,6 +531,7 @@ class Purchase
             {
                 try{
                     $purchaseId = $purchaseStmt->insert_id;
+                    $allQueriesSuccessful = "false";
                     foreach($itemList as $item)
                     {
                         $category=$item['category'];
@@ -556,9 +557,15 @@ class Purchase
                             $stock_dataStmt->bind_param("sssssssdddddddsi",$category,$brand,$product,$flavor,$unit,$location,$expDate,$gst,$qty,$price,$gstPer,$basePer,$mrpPrice,$salePrice,$item_code,$purchaseId);
                             if($stock_dataStmt->execute())
                             {
-                                echo json_encode(['message' => 'Purchased successfully..']);
+                                $allQueriesSuccessful = "true";  
+                                
                             }
                         }
+                    }
+
+                    if($allQueriesSuccessful=='true') 
+                    {
+                        echo json_encode(['message' => 'Purchased successfully..']);
                     }
                 }catch(mysqli_sql_exception $nestedException)
                 {
@@ -573,12 +580,196 @@ class Purchase
         {
             echo json_encode(['message' => 'Something Went Wrong..']);
         }
-
-
-        // foreach($itemList as $item)
-        // {
-        //     echo json_encode($item['item_code']);
-        // }
     }
 }
+
+
+class Invoice
+{
+    private $conn;
+
+    public function __construct($conn) {
+        $this->conn = $conn;
+    }
+    public function invoiceData($custName, $saleDate, $totalAmt,$gstsel,$pay,$saleitemList)
+    {
+        $invoiceStmt=$this->conn->prepare("INSERT INTO `invoice`(`custName`,`date`, `totalAmt`, `gstType`, `payMode`) VALUES (?,?,?,?,?)");
+        $invoiceStmt->bind_param("ssdss",$custName,$saleDate,$totalAmt,$gstsel,$pay);
+        if($invoiceStmt->execute())
+        {
+                $allQueriesSuccessful = "false";
+                $invoiceId = $invoiceStmt->insert_id;
+                foreach($saleitemList as $item)
+                {
+                    $category=$item['category'];
+                    $brand=$item['brand'];
+                    $product=$item['product'];
+                    $flavor=$item['flavor'];
+                    $unit=$item['unit'];
+                    $item_code=$item['item_code'];
+
+                    $gst=$item['gst'];
+                    $saleQty=$item['saleQty'];
+                    $oldqty=$item['oldqty'];
+                    $rate=$item['perItem'];
+                    $amount=$item['BAseAmount'];
+                    $gstAmount=$item['gstAmount'];
+                    $totalAmount=$item['total'];
+
+                    $stockid=$item['stockid'];
+
+                    $igst=0;
+                    $cgst=0;
+                    $sgst=0;
+                    if($gstsel=='igst')
+                    {
+                        $igst=$gstAmount;
+                    }else if($gstsel=='gst')
+                    {
+                        $cgst=$gstAmount/2;
+                        $sgst=$gstAmount/2;
+                    }   
+
+                    //profit Calculation
+                    $basepur=$item['basepur'];
+                    $rate=$item['perItem'];
+
+                    $perPfofit=$basepur-$rate;
+                    $totalProfit=$perPfofit*$saleQty;
+
+                    // ADDING INVOICE DATA
+                    $invoiceDataStmt=$this->conn->prepare("INSERT INTO `invoice_data`(`category`, `brand`, `product`, `flavor`, `unit`, `gst`, `qty`, `rate`, `amount`, `sgst`, `cgst`, `igst`, `totalGst`, `totalAmount`, `inv_no`, `item_code`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    $invoiceDataStmt->bind_param("sssssdddddddddis",$category,$brand,$product,$flavor,$unit,$gst,$saleQty,$rate,$amount,$sgst,$cgst,$igst,$gstAmount,$totalAmount,$invoiceId,$item_code);
+                    if($invoiceDataStmt->execute())
+                    {
+                        $invoiceDataId = $invoiceDataStmt->insert_id;
+                        $updatedQty=$oldqty-$saleQty;
+                        $updateStmt=$this->conn->prepare("UPDATE stock SET qty = ? WHERE id= ?");
+                        $updateStmt->bind_param("di", $updatedQty, $stockid);
+                        if($updateStmt->execute())
+                        {
+                            $pfofitInsert=$this->conn->prepare("INSERT INTO `profit`(`basePur`, `baseSale`, `profitPer`, `qty`, `totalPfofit`, `ivoice_id`, `ivoicedata_id`) VALUES (?,?,?,?,?,?,?)");
+                            $pfofitInsert->bind_param("dddddii",$basepur,$rate,$perPfofit,$saleQty,$totalProfit,$invoiceId,$invoiceDataId);
+                            if($pfofitInsert->execute())
+                            {
+                                $allQueriesSuccessful = "true";  
+                            }
+                        }
+                    }
+                }
+
+                if($allQueriesSuccessful=='true') 
+                {
+                    echo json_encode(['message' => 'Submited successfully..']);
+                }
+        }else 
+        {
+            echo json_encode(['message' => 'Failed to insert data']);
+        }
+    }
+}
+
+
+
+// public function invoiceData($custName, $saleDate, $totalAmt, $gstsel, $pay, $saleitemList)
+// {
+//     // Start a transaction
+//     $this->conn->begin_transaction();
+
+//     $invoiceStmt = $this->conn->prepare("INSERT INTO `invoice`(`custName`,`date`, `totalAmt`, `gstType`, `payMode`) VALUES (?,?,?,?,?)");
+//     $invoiceStmt->bind_param("ssdss", $custName, $saleDate, $totalAmt, $gstsel, $pay);
+//     if ($invoiceStmt->execute()) {
+//         $invoiceId = $invoiceStmt->insert_id;
+//         $success = true;
+
+//         foreach ($saleitemList as $item) {
+//             // ... Your item details extraction code ...
+
+//             // ... Your GST calculation code ...
+
+//             // ... Your profit calculation code ...
+
+//             // ADDING INVOICE DATA
+//             $invoiceDataStmt = $this->conn->prepare("INSERT INTO `invoice_data`(...) VALUES (...)");
+//             $invoiceDataStmt->bind_param("...", ...);
+//             if ($invoiceDataStmt->execute()) {
+//                 $invoiceDataId = $invoiceDataStmt->insert_id;
+
+//                 // ... Update stock and profit tables ...
+
+//             } else {
+//                 $success = false;
+//                 break; // Break the loop if an item insertion fails
+//             }
+//         }
+
+//         if ($success) {
+//             $this->conn->commit(); // Commit the transaction if all queries succeed
+//             echo json_encode(['message' => 'Submitted successfully..']);
+//         } else {
+//             $this->conn->rollback(); // Rollback the transaction if any query fails
+//             echo json_encode(['message' => 'Failed to insert data']);
+//         }
+//     } else {
+//         $this->conn->rollback(); // Rollback the transaction if invoice insertion fails
+//         echo json_encode(['message' => 'Failed to insert data']);
+//     }
+
+//     // Close prepared statements
+//     $invoiceStmt->close();
+//     $invoiceDataStmt->close();
+
+//     // End the transaction
+//     $this->conn->close();
+// }
+
+// public function invoiceData($custName, $saleDate, $totalAmt, $gstsel, $pay, $saleitemList)
+// {
+//     // Start a transaction
+//     $this->conn->begin_transaction();
+
+//     try {
+//         // Insert invoice details
+//         $invoiceStmt = $this->conn->prepare("INSERT INTO `invoice`(`custName`, `date`, `totalAmt`, `gstType`, `payMode`) VALUES (?, ?, ?, ?, ?)");
+//         $invoiceStmt->bind_param("ssdss", $custName, $saleDate, $totalAmt, $gstsel, $pay);
+        
+//         if (!$invoiceStmt->execute()) {
+//             throw new Exception("Failed to insert invoice details");
+//         }
+
+//         $invoiceId = $invoiceStmt->insert_id;
+
+//         // Insert sale items and related data
+//         foreach ($saleitemList as $item) {
+//             // Extract item details
+            
+//             // Prepare and execute invoice data insertion query
+//             $invoiceDataStmt = $this->conn->prepare("INSERT INTO `invoice_data`(...) VALUES (...)");
+//             $invoiceDataStmt->bind_param("...", ...);
+            
+//             if (!$invoiceDataStmt->execute()) {
+//                 throw new Exception("Failed to insert invoice data");
+//             }
+
+//             // Update stock and profit tables
+            
+//         }
+
+//         // If everything is successful, commit the transaction
+//         $this->conn->commit();
+//         echo json_encode(['message' => 'Submitted successfully..']);
+//     } catch (Exception $e) {
+//         // If any part of the process fails, rollback the transaction
+//         $this->conn->rollback();
+//         echo json_encode(['message' => 'Failed to insert data']);
+//     } finally {
+//         // Close prepared statements
+//         $invoiceStmt->close();
+//         $invoiceDataStmt->close();
+        
+//         // Close the database connection
+//         $this->conn->close();
+//     }
+// }
+
 ?>

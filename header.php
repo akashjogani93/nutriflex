@@ -40,7 +40,7 @@
     <div class="sidebar">
       <ul class="list-group">
         <li class="list-group-item" id="home">
-          <i class="fa fa-home"></i><span>Home</span>
+          <i class="fa fa-home"></i><span>HOME</span>
         </li>
         <div class="belowli"></div>
         <li class="list-group-item" id="pur">
@@ -64,7 +64,11 @@
         </li>
         <div class="belowli"></div>
         <li class="list-group-item" id="sell">
-          <i class="fa fa-shopping-cart"></i><span>Invoice</span>
+          <i class="fa fa-shopping-cart"></i><span>INVOICE</span>
+        </li>
+        <div class="belowli"></div>
+        <li class="list-group-item" id="profit">
+          <i class="fa fa-shopping-cart"></i><span>PROFIT</span>
         </li>
         <div class="belowli"></div>
       </ul>

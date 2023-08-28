@@ -87,6 +87,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         $purchase->purchaseData($venName, $purDate, $totalAmt, $itemList);
         
     }
+
+    if (isset($_POST['custName']) && isset($_POST['saleDate']) && isset($_POST['totalAmt']) && isset($_POST['saleitemList']))
+    {
+        $custName = $_POST['custName'];
+        $saleDate = $_POST['saleDate'];
+        $totalAmt = $_POST['totalAmt'];
+        $gstsel = $_POST['gstsel'];
+        $pay = $_POST['pay'];
+        $saleitemList=$_POST['saleitemList'];
+        // echo json_encode(['message' => 'Something Went Wrong..']);
+        $purchase= new Invoice($conn);
+        $purchase->invoiceData($custName, $saleDate, $totalAmt,$gstsel,$pay,$saleitemList);
+        
+    }
 }
 
 ?>
