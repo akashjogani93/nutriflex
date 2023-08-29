@@ -50,10 +50,14 @@ body
       align-items: center;
     }
     .sidebar .list-group-item i{
-      font-size: 40px;
+      font-size: 30px;
       margin-right: 10px;
     }
-
+    .sidebar .list-group-item span{
+      font-size: 15px;
+      padding-top:2px;
+      font-weight: 500;
+    }
     .sidebar .list-group-item:hover {
       background-color: white;
       color:black;

@@ -22,16 +22,21 @@
             <div class="box-header">
                 <div class="getSpace">
                 </div>
-                <div class="cat active" id="itembox">
+                <div class="cat active" id="stockbox">
                     <h6 class="box-header-names">view stock</h6>
                 </div>
                 <div class="getSpace">
                 </div>
-                <div class="cat" id="itembox">
+                <div class="cat" id="viewExpiry">
                     <h6 class="box-header-names">View Expiry</h6>
                 </div>
+                <div class="getSpace">
+                </div>
+                <div class="cat" id="stockbyPrice">
+                    <h6 class="box-header-names">view stock By Price</h6>
+                </div>
             </div>
-            <div class="box-content">
+            <div class="box-content" id="stockQty">
                 <div class="row">
                     <div class="col-md-4" style="margin-left:40px;">
                         <label for="cate">Filter Category</label>
@@ -61,6 +66,40 @@
                     </div>
                 </div>
             </div> 
+            <div class="box-content" id="stockExpiry" style="display:none">
+                <div class="row">
+                    <div class="col-md-4" style="margin-left:40px;">
+                        <label for="cate">Filter Category</label>
+                        <select class="form-control" id="categoryFilter">
+                            <option value="">Select Category</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-container">
+                            <table id="dataTable"  class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>SL.NO</th>
+                                        <th>Category-Brand-Product-Flavor</th>
+                                        <th>Unit</th>
+                                        <th>Qty</th>
+                                        <th>Item Code</th>
+                                        <th>Expiry</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="expiryTable">
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            <div class="box-content" id="stockbypricedata" style="display:none">
+                
+            </div>
         </div>
     </div>
     <script>

@@ -1391,6 +1391,7 @@ class Stock{
     }
     initializeTabs()
     {
+        const vm=this;
         let log= $.ajax({
             url: 'ajax/fetch_master.php',
             type: 'GET',
@@ -1410,6 +1411,54 @@ class Stock{
                                         <td>${item.unit}</td>
                                         <td>${item.total_qty}</td>
                                         <td>${item.item_code}</td>
+                                    </tr>`;
+                        tbodyElement.innerHTML += rowHTML;
+                });
+            }
+        });
+
+        const tabElements = document.querySelectorAll('.cat');
+        tabElements.forEach(tabName => {
+            tabName.addEventListener('click', () => {
+                tabElements.forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                tabName.classList.add('active');
+                if(tabName.id=='viewExpiry')
+                {   
+                    $('#stockQty').hide();
+                    $('#stockExpiry').show();
+                    vm.viewExpiryRecord();
+                }else if(tabName.id=='stockbox')
+                {
+                    $('#stockExpiry').hide();
+                    $('#stockQty').show();
+                }
+            });
+        });
+    }
+    viewExpiryRecord()
+    {
+        let log= $.ajax({
+            url: 'ajax/fetch_master.php',
+            type: 'GET',
+            data: {
+                expiry:'expiry',
+            },
+            dataType:'json',
+            success: function (response) 
+            {
+                const tbodyElement = document.getElementById('expiryTable');
+                tbodyElement.innerHTML = '';
+                response.forEach((item,index)=> 
+                {
+                    const rowHTML = `<tr>
+                                        <td>${index + 1}</td>
+                                        <td>${item.category} - ${item.brand} - ${item.product} - ${item.flavor}</td>
+                                        <td>${item.unit}</td>
+                                        <td>${item.qty}</td>
+                                        <td>${item.item_code}</td>
+                                        <td>${item.exp}</td>
                                     </tr>`;
                         tbodyElement.innerHTML += rowHTML;
                 });
@@ -1635,9 +1684,9 @@ class Invoice
                     let total = $(row).find('#total').val();
                     let basepur = $(row).find('#basepur').val();
                     // console.log(location, expDate, gst, qty, salePrice, mrpPrice, saleQty);
+                    let Qtyto = $(row).find('#saleqty').val();
                     
-                    
-                    if (saleQty !== '')
+                    if (Qtyto !== "" && parseFloat(Qtyto) !== 0)
                     {
                         total=parseFloat(total);
                         gst=parseFloat(gst);
@@ -2141,12 +2190,12 @@ class Profit
                                         <td>${index + 1}</td>
                                         <td>${item.item_code}</td>
                                         <td>${item.product}</td>
-                                        <td>${item.basePur}</td>
-                                        <td>${item.baseSale}</td>
-                                        <td>${item.profitPer}</td>
+                                        <td>${item.basePur.toFixed(2)}</td>
+                                        <td>${item.baseSale.toFixed(2)}</td>
+                                        <td>${item.profitPer.toFixed(2)}</td>
                                         <td>${item.qty}</td>
-                                        <td>${item.totalProfit}</td>
-                                        <td>${item.invoice_id}</td>
+                                        <td>${item.totalPfofit.toFixed(2)}</td>
+                                        <td>${item.ivoice_id}</td>
                                     </tr>`;
                         tbodyElement.innerHTML += rowHTML;
                 });

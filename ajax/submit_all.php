@@ -597,78 +597,77 @@ class Invoice
         $invoiceStmt->bind_param("ssdss",$custName,$saleDate,$totalAmt,$gstsel,$pay);
         if($invoiceStmt->execute())
         {
-                $allQueriesSuccessful = "false";
-                $invoiceId = $invoiceStmt->insert_id;
-                foreach($saleitemList as $item)
+            $allQueriesSuccessful = "false";
+            $invoiceId = $invoiceStmt->insert_id;
+            foreach($saleitemList as $item)
+            {
+                $category=$item['category'];
+                $brand=$item['brand'];
+                $product=$item['product'];
+                $flavor=$item['flavor'];
+                $unit=$item['unit'];
+                $item_code=$item['item_code'];
+
+                $gst=$item['gst'];
+                $saleQty=$item['saleQty'];
+                $oldqty=$item['oldqty'];
+                $rate=$item['perItem'];
+                $amount=$item['BAseAmount'];
+                $gstAmount=$item['gstAmount'];
+                $totalAmount=$item['total'];
+
+                $stockid=$item['stockid'];
+
+                $igst=0;
+                $cgst=0;
+                $sgst=0;
+                if($gstsel=='igst')
                 {
-                    $category=$item['category'];
-                    $brand=$item['brand'];
-                    $product=$item['product'];
-                    $flavor=$item['flavor'];
-                    $unit=$item['unit'];
-                    $item_code=$item['item_code'];
-
-                    $gst=$item['gst'];
-                    $saleQty=$item['saleQty'];
-                    $oldqty=$item['oldqty'];
-                    $rate=$item['perItem'];
-                    $amount=$item['BAseAmount'];
-                    $gstAmount=$item['gstAmount'];
-                    $totalAmount=$item['total'];
-
-                    $stockid=$item['stockid'];
-
-                    $igst=0;
-                    $cgst=0;
-                    $sgst=0;
-                    if($gstsel=='igst')
-                    {
-                        $igst=$gstAmount;
-                    }else if($gstsel=='gst')
-                    {
-                        $cgst=$gstAmount/2;
-                        $sgst=$gstAmount/2;
-                    }   
+                    $igst=$gstAmount;
+                }else if($gstsel=='gst')
+                {
+                    $cgst=$gstAmount/2;
+                    $sgst=$gstAmount/2;
+                }   
 
                     //profit Calculation
-                    $basepur=$item['basepur'];
-                    $rate=$item['perItem'];
+                $basepur=$item['basepur'];
+                $rate=$item['perItem'];
 
-                    $perPfofit=$basepur-$rate;
-                    $totalProfit=$perPfofit*$saleQty;
+                $perPfofit=$rate-$basepur;
+                $totalProfit=$perPfofit*$saleQty;
 
                     // ADDING INVOICE DATA
-                    $invoiceDataStmt=$this->conn->prepare("INSERT INTO `invoice_data`(`category`, `brand`, `product`, `flavor`, `unit`, `gst`, `qty`, `rate`, `amount`, `sgst`, `cgst`, `igst`, `totalGst`, `totalAmount`, `inv_no`, `item_code`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-                    $invoiceDataStmt->bind_param("sssssdddddddddis",$category,$brand,$product,$flavor,$unit,$gst,$saleQty,$rate,$amount,$sgst,$cgst,$igst,$gstAmount,$totalAmount,$invoiceId,$item_code);
-                    if($invoiceDataStmt->execute())
+                $invoiceDataStmt=$this->conn->prepare("INSERT INTO `invoice_data`(`category`, `brand`, `product`, `flavor`, `unit`, `gst`, `qty`, `rate`, `amount`, `sgst`, `cgst`, `igst`, `totalGst`, `totalAmount`, `inv_no`, `item_code`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                $invoiceDataStmt->bind_param("sssssdddddddddis",$category,$brand,$product,$flavor,$unit,$gst,$saleQty,$rate,$amount,$sgst,$cgst,$igst,$gstAmount,$totalAmount,$invoiceId,$item_code);
+                if($invoiceDataStmt->execute())
+                {
+                    $invoiceDataId = $invoiceDataStmt->insert_id;
+                    $updatedQty=$oldqty-$saleQty;
+                    $updateStmt=$this->conn->prepare("UPDATE stock SET qty = ? WHERE id= ?");
+                    $updateStmt->bind_param("di", $updatedQty, $stockid);
+                    if($updateStmt->execute())
                     {
-                        $invoiceDataId = $invoiceDataStmt->insert_id;
-                        $updatedQty=$oldqty-$saleQty;
-                        $updateStmt=$this->conn->prepare("UPDATE stock SET qty = ? WHERE id= ?");
-                        $updateStmt->bind_param("di", $updatedQty, $stockid);
-                        if($updateStmt->execute())
+                        $pfofitInsert=$this->conn->prepare("INSERT INTO `profit`(`basePur`, `baseSale`, `profitPer`, `qty`, `totalPfofit`, `ivoice_id`, `ivoicedata_id`) VALUES (?,?,?,?,?,?,?)");
+                        $pfofitInsert->bind_param("dddddii",$basepur,$rate,$perPfofit,$saleQty,$totalProfit,$invoiceId,$invoiceDataId);
+                        if($pfofitInsert->execute())
                         {
-                            $pfofitInsert=$this->conn->prepare("INSERT INTO `profit`(`basePur`, `baseSale`, `profitPer`, `qty`, `totalPfofit`, `ivoice_id`, `ivoicedata_id`) VALUES (?,?,?,?,?,?,?)");
-                            $pfofitInsert->bind_param("dddddii",$basepur,$rate,$perPfofit,$saleQty,$totalProfit,$invoiceId,$invoiceDataId);
-                            if($pfofitInsert->execute())
-                            {
-                                $allQueriesSuccessful = "true";  
-                            }
+                            $allQueriesSuccessful = "true";  
                         }
                     }
                 }
+            }
 
-                if($allQueriesSuccessful=='true') 
-                {
-                    echo json_encode(['message' => 'Submited successfully..']);
-                }
+            if($allQueriesSuccessful=='true') 
+            {
+                echo json_encode(['message' => 'Submited successfully..']);
+            }
         }else 
         {
             echo json_encode(['message' => 'Failed to insert data']);
         }
     }
 }
-
 
 
 // public function invoiceData($custName, $saleDate, $totalAmt, $gstsel, $pay, $saleitemList)

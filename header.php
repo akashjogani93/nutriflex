@@ -30,10 +30,20 @@
   <title>FLEX NUTRI</title>
 </head>
 <body>
+
+<?php 
+  session_start();
+  if(!$_SESSION['login'])
+  {
+    header("Location: index.php");
+    exit();
+
+  }
+?>
   <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">FLEX NUTRI</a>
-      <a class="navbar-brand" href="#" style="float:right;">LOGOUT</a>
+      <a class="navbar-brand" href="logout.php" style="float:right;">LOGOUT</a>
     </div>
   </nav>
   <div class="wrapper">
@@ -43,28 +53,28 @@
           <i class="fa fa-home"></i><span>HOME</span>
         </li>
         <div class="belowli"></div>
-        <li class="list-group-item" id="pur">
-          <i class="fa fa-home"></i><span>PURCHASE</span>
-        </li>
-        <div class="belowli"></div>
-        <li class="list-group-item" id="item">
-          <i class="fa fa-info-circle"></i><span>ITEM</span>
-        </li>
-        <div class="belowli"></div>
-        <li class="list-group-item" id="master">
-          <i class="fa fa-cogs"></i><span>MASTER</span>
-        </li>
-        <div class="belowli"></div>
-        <li class="list-group-item" id="vendor">
-          <i class="fa fa-shopping-cart"></i><span>VENDOR</span>
+        <li class="list-group-item" id="sell">
+          <i class="fa fa-pie-chart" aria-hidden="true"></i><span>INVOICE</span>
         </li>
         <div class="belowli"></div>
         <li class="list-group-item" id="stock">
-          <i class="fa fa-shopping-cart"></i><span>STOCK</span>
+          <i class="fa fa-database" aria-hidden="true"></i><span>STOCK</span>
         </li>
         <div class="belowli"></div>
-        <li class="list-group-item" id="sell">
-          <i class="fa fa-shopping-cart"></i><span>INVOICE</span>
+        <li class="list-group-item" id="pur">
+          <i class="fa fa-pie-chart" aria-hidden="true"></i><span>PURCHASE</span>
+        </li>
+        <div class="belowli"></div>
+        <li class="list-group-item" id="item">
+          <i class="fa fa-archive" aria-hidden="true"></i><span>ITEM</span>
+        </li>
+        <div class="belowli"></div>
+        <li class="list-group-item" id="master">
+          <i class="fa fa-archive" aria-hidden="true"></i><span>MASTER</span>
+        </li>
+        <div class="belowli"></div>
+        <li class="list-group-item" id="vendor">
+          <i class="fa fa-user" aria-hidden="true"></i><span>VENDOR</span>
         </li>
         <div class="belowli"></div>
         <li class="list-group-item" id="profit">

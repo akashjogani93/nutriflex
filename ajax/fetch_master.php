@@ -239,7 +239,7 @@ if(isset($_GET['purViewRecordItem']))
 
 if(isset($_GET['stock']))
 {
-    $fetchStmt = $conn->prepare("SELECT *, SUM(qty) AS total_qty FROM `stock` GROUP BY item_code");
+    $fetchStmt = $conn->prepare("SELECT *, SUM(qty) AS total_qty FROM `stock` WHERE qty != 0 GROUP BY item_code");
     $fetchStmt->execute();
 
     $result = $fetchStmt->get_result();
@@ -261,7 +261,7 @@ if(isset($_GET['stock']))
 if(isset($_POST['sellMaster']))
 {
     $item_code=$_POST['sellMaster'];
-    $sellStmt=$conn->prepare("SELECT * FROM `stock` WHERE `item_code`= ?");
+    $sellStmt=$conn->prepare("SELECT * FROM `stock` WHERE `item_code`= ? AND `qty` != 0");
     $sellStmt->bind_param("s",$item_code);
     $sellStmt->execute();
     $result= $sellStmt->get_result();
@@ -302,7 +302,7 @@ if(isset($_POST['id']))
     {
         $category=$_POST['category'];
 
-        $fetchStmt=$conn->prepare("SELECT DISTINCT `brand` AS `name` FROM `stock` WHERE `category` = ?");
+        $fetchStmt=$conn->prepare("SELECT DISTINCT `brand` AS `name` FROM `stock` WHERE `category` = ? AND `qty` != 0");
         $fetchStmt->bind_param("s",$category);
 
     }else if($select_Id=='brand')
@@ -310,7 +310,7 @@ if(isset($_POST['id']))
         $category=$_POST['category'];
         $brand=$_POST['brand'];
 
-        $fetchStmt=$conn->prepare("SELECT DISTINCT `product` AS `name` FROM `stock` WHERE `category` = ? AND `brand` = ?");
+        $fetchStmt=$conn->prepare("SELECT DISTINCT `product` AS `name` FROM `stock` WHERE `category` = ? AND `brand` = ? AND `qty` != 0");
         $fetchStmt->bind_param("ss",$category,$brand);
     }
     else if($select_Id=='product')
@@ -319,7 +319,7 @@ if(isset($_POST['id']))
         $brand=$_POST['brand'];
         $product=$_POST['product'];
 
-        $fetchStmt=$conn->prepare("SELECT DISTINCT `flavor` AS `name` FROM `stock` WHERE `category` = ? AND `brand` = ? AND `product` = ?");
+        $fetchStmt=$conn->prepare("SELECT DISTINCT `flavor` AS `name` FROM `stock` WHERE `category` = ? AND `brand` = ? AND `product` = ? AND `qty` != 0");
         $fetchStmt->bind_param("sss",$category,$brand,$product);
     }
     else if($select_Id=='flavor')
@@ -328,7 +328,7 @@ if(isset($_POST['id']))
         $brand=$_POST['brand'];
         $product=$_POST['product'];
         $flavor=$_POST['flavor'];
-        $fetchStmt=$conn->prepare("SELECT DISTINCT `unit` AS `name` FROM `stock` WHERE `category` = ? AND `brand` = ? AND `product` = ? AND `flavor` = ?");
+        $fetchStmt=$conn->prepare("SELECT DISTINCT `unit` AS `name` FROM `stock` WHERE `category` = ? AND `brand` = ? AND `product` = ? AND `flavor` = ? AND `qty` != 0");
         $fetchStmt->bind_param("ssss",$category,$brand,$product,$flavor);
     }else if($select_Id=='unit')
     {
@@ -337,7 +337,7 @@ if(isset($_POST['id']))
         $product=$_POST['product'];
         $flavor=$_POST['flavor'];
         $unit=$_POST['unit'];
-        $fetchStmt=$conn->prepare("SELECT DISTINCT `item_code` AS `name` FROM `stock` WHERE `category` = ? AND `brand` = ? AND `product` = ? AND `flavor` = ? AND `unit` = ?");
+        $fetchStmt=$conn->prepare("SELECT DISTINCT `item_code` AS `name` FROM `stock` WHERE `category` = ? AND `brand` = ? AND `product` = ? AND `flavor` = ? AND `unit` = ? AND `qty` != 0");
         $fetchStmt->bind_param("sssss",$category,$brand,$product,$flavor,$unit);
     }
 
@@ -405,5 +405,22 @@ if(isset($_GET['profit']))
     $fetchStmt->close();
 }
 
+
+
+//invoices
+if(isset($_GET['expiry']))
+{
+    $fetchStmt = $conn->prepare("SELECT * FROM `stock` WHERE `exp` <= DATE_ADD(CURDATE(), INTERVAL 15 DAY) AND `qty` != 0");
+    $fetchStmt->execute();
+    $result=$fetchStmt->get_result();
+
+    $rows=array();
+    while($row=$result->fetch_assoc())
+    {
+        $rows[] =$row;
+    }
+    echo json_encode($rows);
+    $fetchStmt->close();
+}
 $conn->close();
 ?>

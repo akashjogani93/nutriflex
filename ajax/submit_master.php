@@ -1,4 +1,5 @@
 <?php
+session_start();
 include('../connect.php');
 include('submit_all.php');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') 
@@ -101,6 +102,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         $purchase->invoiceData($custName, $saleDate, $totalAmt,$gstsel,$pay,$saleitemList);
         
     }
+
+
+    if(isset($_POST['username']) && isset($_POST['password']))
+    {
+        $user=$_POST['username'];
+        $pass=$_POST['password'];
+
+        $checkStmt=$conn->prepare("SELECT * FROM `login` WHERE `user` = ? AND `pass` = ? ");
+        $checkStmt->bind_param("ss",$user,$pass);
+
+        $checkStmt->execute();
+
+        $result = $checkStmt->get_result();
+
+        if ($result->num_rows == 1) 
+        {
+            $_SESSION['login'] = "login";
+            echo 0;
+        } else {
+            echo 1;
+        }
+        $checkStmt->close();
+        }
 }
 
 ?>
