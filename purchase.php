@@ -20,8 +20,6 @@
                 </div>
             </div>
             <div class="box-header">
-                <div class="getSpace">
-                </div>
                 <div class="cat active" id="addPur">
                     <h6 class="box-header-names">PURCHASE MASTER</h6>
                 </div>
@@ -67,18 +65,24 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="cate">Select Flavor</label>
+                                <label for="cate">Select Flavour</label>
                                 <select class="form-control onchange" id="flavor">
                                     <option value="">Select Flavor</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <div class="form-group">
-                                <label for="cate">Select Unit</label>
+                                <label for="cate">Unit</label>
                                 <select class="form-control onchange" id="unit">
                                     <option value="">Select Unit</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label for="cate">Unit Qty</label>
+                                <input class="form-control onchange" id="unitQty" type="text">
                             </div>
                         </div>
                     </div>
@@ -139,13 +143,13 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="cate">SalePrice</label>
+                                <label for="cate">Sale-Price</label>
                                 <input type="text" class="form-control" id="salePrice">
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <button class="btn btn-info" id="addPurchaseItem" style="margin-top:30px; border-radius: 0;">ADD ITEM</button>
+                                <button class="btn btn-info" id="addPurchaseItem" style="margin-top:30px;">ADD ITEM</button>
                                 <button class="btn btn-info" id="updatePurchaseItem" style="display:none; margin-top:25px;">UPDATE</button>
                             </div>
                         </div>
@@ -163,7 +167,7 @@
                                 <table id="dataTable"  class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>SL.NO</th>
+                                            <th>Sl.No</th>
                                             <th>Category-Brand-Product-Flavor</th>
                                             <th>Unit</th>
                                             <th>GST</th>
@@ -174,7 +178,7 @@
                                             <th>Sale/Price</th>
                                             <th>Total</th>
                                             <th>Expiry</th>
-                                            <th>DELETE</th>
+                                            <th>Delete</th>
                                         </tr>
                                     </thead>
                                     <tbody id="itemTableBoady">
@@ -210,8 +214,8 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group" style="display:flex;">
-                                <button class="btn btn-info" id="submitPurchase" style="margin-top:30px; border-radius: 0; margin-right:5px;">PURCHASE</button>
-                                <button class="btn btn-danger" id="cancelPurchase" style="margin-top:30px; border-radius: 0;">CANCEL</button>
+                                <button class="btn btn-info" id="submitPurchase" style="margin-top:30px; margin-right:5px;">PURCHASE</button>
+                                <button class="btn btn-danger" id="cancelPurchase" style="margin-top:30px;">CANCEL</button>
                             </div>
                         </div>
                     </div>
@@ -219,6 +223,27 @@
             </div>
             <div class="box-content" id="viewpurchaseData" style="display:none;">
                 <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                            <label for="cate">Date From:</label>
+                                <input type="date" name="datefrom" id="datefrom" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                            <label for="cate">Date To:</label>
+                                <input type="date" name="dateto" id="dateto" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group" style="dispaly:flex;">
+                                <button class="btn btn-info" id="search" style="border-radius: 0; margin-top:25px; margin-right:5px">SEARCH</button>
+                                <button class="btn btn-warning" id="refresh" style="border-radius: 0; margin-top:25px;">REFRESH</button>
+                            </div>
+                        </div>
+                    </div>
+                    </br>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-container">

@@ -14,34 +14,24 @@
             </br>
             </br>
             <div class="row">
-                <div class="col-md-12">
-                    <div class="card-deck">
-                        <a href='purchase.php'><div class="card mb-4">
-                            <div class="view overlay">
-                                <div class="mask rgba-white-slight"></div>
-                            </div>
-                            <div class="card-body">
-                                <h4 class="card-title">PURCHASE</h4>
-                            </div>
-                        </div></a>
-                        <a href="sell.php"><div class="card mb-4">
-                            <div class="view overlay">
-                                <div class="mask rgba-white-slight"></div>
-                            </div>
-                            <div class="card-body">
-                                <h4 class="card-title">INVOICE</h4>
-                            </div>
-                        </div></a>
-                        <a href="stock.php"><div class="card mb-4">
-                            <div class="view overlay">
-                                <div class="mask rgba-white-slight"></div>
-                            </div>
-                            <div class="card-body">
-                                <h4 class="card-title">STOCK</h4>
-                            </div>
-                        </div></a>
-                    </div>
+            <div class="col-sm-6">
+                <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Invoice Module</h5>
+                    <p class="card-text"></p>
+                    <a href="sell.php" class="btn btn-primary">Invoice</a>
                 </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Purchase Module</h5>
+                    <p class="card-text"></p>
+                    <a href="purchase.php" class="btn btn-primary">Purchase</a>
+                </div>
+                </div>
+            </div>
             </div>
         </div>
     </div>

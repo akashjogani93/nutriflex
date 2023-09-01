@@ -20,15 +20,15 @@
                 </div>
             </div>
             <div class="box-header">
-                <div class="getSpace">
-                </div>
+                <!-- <div class="getSpace">
+                </div> -->
                 <div class="cat active" id="category">
                     <h6 class="box-header-names">Category</h6>
                 </div>
                 <div class="getSpace">
                 </div>
                 <div class="cat" id="flavor">
-                    <h6 class="box-header-names">Flavor</h6>
+                    <h6 class="box-header-names">Flavour</h6>
                 </div>
                 <div class="getSpace">
                 </div>  

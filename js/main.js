@@ -51,7 +51,7 @@ class TabManager
                                         <tr>
                                             <th>SL.NO</th>
                                             <th>${tableName} NAME</th>
-                                            <th>EDIT/DELETE</th>
+                                            <th>EDIT</th>
                                         </tr>
                                     </thead>
                                     <tbody id="${tabId}-tbody">
@@ -135,7 +135,7 @@ class TabManager
                                         <td>${rowData.cateName}</td>
                                         <td>
                                             <button class="btn btn-sm btn-primary edit-button" data-id="${rowData.cat_id}">Edit</button>
-                                            <button class="btn btn-sm btn-danger delete-button" data-id="${rowData.cat_id}">Delete</button>
+                                            <!-- <button class="btn btn-sm btn-danger delete-button" data-id="${rowData.cat_id}">Delete</button>-->
                                         </td>
                                     </tr>`;
                     tbodyElement.innerHTML += rowHTML;
@@ -149,7 +149,7 @@ class TabManager
                                         <td>${rowData.flavorName}</td>
                                         <td>
                                             <button class="btn btn-sm btn-primary edit-button" data-id="${rowData.id}">Edit</button>
-                                            <button class="btn btn-sm btn-danger delete-button" data-id="${rowData.id}">Delete</button>
+                                          <!--  <button class="btn btn-sm btn-danger delete-button" data-id="${rowData.id}">Delete</button> -->
                                         </td>
                                     </tr>`;
                     tbodyElement.innerHTML += rowHTML;
@@ -163,7 +163,7 @@ class TabManager
                                             <td>${rowData.brandName}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-primary edit-button" data-id="${rowData.id}">Edit</button>
-                                                <button class="btn btn-sm btn-danger delete-button" data-id="${rowData.id}">Delete</button>
+                                              <!--  <button class="btn btn-sm btn-danger delete-button" data-id="${rowData.id}">Delete</button> -->
                                             </td>
                                         </tr>`;
                         tbodyElement.innerHTML += rowHTML;
@@ -178,7 +178,7 @@ class TabManager
                                             <td>${rowData.slab}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-primary edit-button" data-id="${rowData.id}">Edit</button>
-                                                <button class="btn btn-sm btn-danger delete-button" data-id="${rowData.id}">Delete</button>
+                                               <!-- <button class="btn btn-sm btn-danger delete-button" data-id="${rowData.id}">Delete</button> -->
                                             </td>
                                         </tr>`;
                         tbodyElement.innerHTML += rowHTML;
@@ -192,7 +192,7 @@ class TabManager
                                             <td>${rowData.location}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-primary edit-button" data-id="${rowData.id}">Edit</button>
-                                                <button class="btn btn-sm btn-danger delete-button" data-id="${rowData.id}">Delete</button>
+                                              <!--  <button class="btn btn-sm btn-danger delete-button" data-id="${rowData.id}">Delete</button> -->
                                             </td>
                                         </tr>`;
                         tbodyElement.innerHTML += rowHTML;
@@ -207,7 +207,7 @@ class TabManager
                                             <td>${rowData.unitName}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-primary edit-button" data-id="${rowData.id}">Edit</button>
-                                                <button class="btn btn-sm btn-danger delete-button" data-id="${rowData.id}">Delete</button>
+                                              <!--  <button class="btn btn-sm btn-danger delete-button" data-id="${rowData.id}">Delete</button> -->
                                             </td>
                                         </tr>`;
                         tbodyElement.innerHTML += rowHTML;
@@ -372,8 +372,8 @@ class ItemTab
         this.dropdowns = [
             { id: 'category', tabId: 'category' },
             { id: 'brand', tabId: 'brand' },
-            { id: 'flavor', tabId: 'flavor' },
-            { id: 'unit', tabId: 'unit' },
+            // { id: 'flavor', tabId: 'flavor' },
+            // { id: 'unit', tabId: 'unit' },
             { id: 'categoryFilter', tabId: 'category' },
         ];
     }
@@ -401,13 +401,16 @@ class ItemTab
                         }else if(dropdown.id=='brand')
                         {
                             dropdownElement.append($('<option>').text(item.brandName).val(item.brandName));
-                        }else if(dropdown.id=='flavor')
-                        {
-                            dropdownElement.append($('<option>').text(item.flavorName).val(item.flavorName));
-                        }else if(dropdown.id=='unit')
-                        {
-                            dropdownElement.append($('<option>').text(item.unitName).val(item.unitName));
-                        }else if(dropdown.id=='categoryFilter')
+                        }
+                        // else if(dropdown.id=='flavor')
+                        // {
+                        //     dropdownElement.append($('<option>').text(item.flavorName).val(item.flavorName));
+                        // }
+                        // else if(dropdown.id=='unit')
+                        // {
+                        //     dropdownElement.append($('<option>').text(item.unitName).val(item.unitName));
+                        // }
+                        else if(dropdown.id=='categoryFilter')
                         {
                             dropdownElement.append($('<option>').text(item.cateName).val(item.cateName));
                         }
@@ -434,11 +437,11 @@ class ItemTab
             const selectedCategory = this.value;
             if (selectedCategory === '') 
             {
-                $('.table tr').show();
+                $('#itemTableBoady tr').show();
             }else 
             {
-                $('.table tr').hide();
-                $('.table tr').each(function() 
+                $('#itemTableBoady tr').hide();
+                $('#itemTableBoady tr').each(function() 
                 {
                     if ($(this).find('td:nth-child(2)').text() === selectedCategory) {
                         $(this).show();
@@ -474,17 +477,17 @@ class ItemTab
                 const category = row.cells[1].textContent;
                 const brand = row.cells[2].textContent;
                 const product = row.cells[3].textContent;
-                const flavor = row.cells[4].textContent;
-                const unit = row.cells[5].textContent;
-                const item_code = row.cells[6].textContent;
+                // const flavor = row.cells[4].textContent;
+                // const unit = row.cells[5].textContent;
+                const item_code = row.cells[4].textContent;
                 const cat_id = row.querySelector('.edit-button').getAttribute('data-id');
                 const rowData={
                     'slno':slno,
                     'category':category,
                     'brand':brand,
                     'product':product,
-                    'flavor':flavor,
-                    'unit':unit,
+                    // 'flavor':flavor,
+                    // 'unit':unit,
                     'item_code':item_code,
                     'id' : cat_id
                 }
@@ -510,15 +513,13 @@ class ItemTab
                                         <td>${rowData.category}</td>
                                         <td>${rowData.brand}</td>
                                         <td>${rowData.product}</td>
-                                        <td>${rowData.flavor}</td>
-                                        <td>${rowData.unit}</td>
                                         <td>${rowData.item_code}</td>
                                         <td>
                                             <button class="btn btn-sm btn-primary edit-button" data-id="${rowData.id}">Edit</button>
-                                            <button class="btn btn-sm btn-danger delete-button" data-id="${rowData.id}">Delete</button>
+                                           <!-- <button class="btn btn-sm btn-danger delete-button" data-id="${rowData.id}">Delete</button> -->
                                         </td>
                                     </tr>`;
-                        tbodyElement.innerHTML += rowHTML;
+                    tbodyElement.innerHTML += rowHTML;
                 });
 
             }
@@ -536,12 +537,12 @@ class ItemTab
         // return;
         var cate=$('#category').val();
         var brand=$('#brand').val();
-        var flavor=$('#flavor').val();
+        // var flavor=$('#flavor').val();
         var product=$('#product').val();
-        var unit=$('#unit').val();
+        // var unit=$('#unit').val();
         var item_code=$('#item_code').val();
 
-        var feilds=['#category','#brand','#product','#flavor','#unit','#item_code'];
+        var feilds=['#category','#brand','#product','#item_code'];
         for(var i=0;i<feilds.length;i++)
         {
                 if($(feilds[i]).val() == '')
@@ -560,9 +561,9 @@ class ItemTab
                 data:{
                     cate:cate,
                     brand:brand,
-                    flavor:flavor,
+                    // flavor:flavor,
                     product:product,
-                    unni:unit,
+                    // unni:unit,
                     item_code:item_code,
                     slno:slno,
                     value:value
@@ -598,9 +599,9 @@ class ItemTab
         $('#slno').val(rowData.slno);
         $('#category').val(rowData.category);
         $('#brand').val(rowData.brand);
-        $('#flavor').val(rowData.flavor);
+        // $('#flavor').val(rowData.flavor);
         $('#product').val(rowData.product);
-        $('#unit').val(rowData.unit);
+        // $('#unit').val(rowData.unit);
         $('#item_code').val(rowData.item_code);
     }
 
@@ -722,7 +723,7 @@ class vendorReg
                                             <td>${rowData.venAdds}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-primary edit-button" data-id="${rowData.id}">Edit</button>
-                                                <button class="btn btn-sm btn-danger delete-button" data-id="${rowData.id}">Delete</button>
+                                               <!-- <button class="btn btn-sm btn-danger delete-button" data-id="${rowData.id}">Delete</button> -->
                                             </td>
                                         </tr>`;
                             tbodyElement.innerHTML += rowHTML;
@@ -804,6 +805,8 @@ class Purchase {
             { id: 'category', purchase: 'category' },
             { id: 'location', purchase: 'location' },
             { id: 'gst', purchase: 'gst' },
+            { id: 'flavor', purchase: 'flavor' },
+            { id: 'unit', purchase: 'unit' },
         ];
 
         this.initializeTabs();
@@ -824,13 +827,23 @@ class Purchase {
                 {   
                     $('#addPurchaseData').hide();
                     $('#viewpurchaseData').show();
-                    vm.viewPurchaseRecord();
+                    vm.viewPurchaseRecord(0);
                 }else if(tabName.id=='addPur')
                 {
                     $('#viewpurchaseData').hide();
                     $('#addPurchaseData').show();
                 }
             });
+        });
+
+        const search=document.getElementById('search');
+        search.addEventListener('click',() => {
+            vm.viewPurchaseRecord(1);
+        });
+
+        const refresh=document.getElementById('refresh');
+        refresh.addEventListener('click',() => {
+            vm.viewPurchaseRecord(0);
         });
 
         //categeroy and gst 
@@ -858,34 +871,25 @@ class Purchase {
                             }else if(dropdown.id=='gst')
                             {
                                 dropdownElement.append($('<option>').text(item.slab).val(item.slab));
+                            }else if(dropdown.id=='flavor')
+                            {
+                                dropdownElement.append($('<option>').text(item.flavorName).val(item.flavorName));
+                            }else if(dropdown.id=='unit')
+                            {
+                                dropdownElement.append($('<option>').text(item.unitName).val(item.unitName));
                             }
                         });
                 }
             });
         });
-        
-        // const selectElements = document.querySelectorAll('.onchange');
-        // selectElements.forEach(function (element) 
-        // {
-        //     element.addEventListener('change', function (event)
-        //     {
-        //         const selectedValue = event.target.value;
-        //         const categoryId = event.target.id;
-        //         const status=0;
-        //         if(!selectedValue){return;}
-        //         vm.fetchAllData(selectedValue, categoryId,status);
-        //     });
-        // });
-
         //onchange
-        const categories = document.querySelectorAll('#category, #brand, #product, #flavor, #unit');
+        const categories = document.querySelectorAll('#category, #brand, #product');
         categories.forEach(category => {
             category.addEventListener('change', function(event)
             {
                 let selectedValue = event.target.value;
                 const categoryId = event.target.id;
                 const status=0;
-                // console.log(selectedValue,categoryId);
                 if(!selectedValue)return;
                 vm.fetchAllData(selectedValue, categoryId,status);
             });
@@ -949,6 +953,18 @@ class Purchase {
         {
             this.submitData();
         });
+        
+        const cancelPurchase = document.getElementById('cancelPurchase');
+        cancelPurchase.addEventListener('click', (event) => 
+        {
+            // this.cancelPurchase();
+            let items = JSON.parse(localStorage.getItem('items'));
+            localStorage.removeItem('items');
+            const tableBody = document.getElementById('itemTableBoady');
+            let totalAmount = 0;
+            tableBody.innerHTML = '';
+            vm.fetchItems();
+        });
     }
 
     fetchAllData(selectedValue, categoryId,status)
@@ -956,8 +972,8 @@ class Purchase {
         var category= $('#category').val();
         var brand=$('#brand').val();
         var product= $('#product').val();
-        var flavor= $('#flavor').val();
-        var unit= $('#unit').val();
+        // var flavor= $('#flavor').val();
+        // var unit= $('#unit').val();
 
         var formData = new FormData();
         formData.append('id1', categoryId);
@@ -976,23 +992,8 @@ class Purchase {
             formData.append('category1', category);
             formData.append('brand1', brand);
             formData.append('product1', selectedValue);
-        }
-        else if(categoryId=='flavor')
-        {
-            formData.append('category1', category);
-            formData.append('brand1', brand);
-            formData.append('product1', product);
-            formData.append('flavor1', selectedValue);
-        }
-        else if(categoryId=='unit')
-        {
-            formData.append('category1', category);
-            formData.append('brand1', brand);
-            formData.append('product1', product);
-            formData.append('flavor1', flavor);
-            formData.append('unit1', selectedValue);
 
-            var input=['#category','#brand','#product','#flavor','#unit'];
+            var input=['#category','#brand','#product'];
             for(var i=0; i<input.length; i++)
             {
                 if($(input[i]).val() == '')
@@ -1004,7 +1005,36 @@ class Purchase {
                     $(input[i]).css("border","");
                 }
             }
-        }else if(categoryId=='item_code')
+        }
+        // else if(categoryId=='flavor')
+        // {
+        //     formData.append('category1', category);
+        //     formData.append('brand1', brand);
+        //     formData.append('product1', product);
+        //     formData.append('flavor1', selectedValue);
+        // }
+        // else if(categoryId=='unit')
+        // {
+        //     formData.append('category1', category);
+        //     formData.append('brand1', brand);
+        //     formData.append('product1', product);
+        //     formData.append('flavor1', flavor);
+        //     formData.append('unit1', selectedValue);
+
+            // var input=['#category','#brand','#product','#flavor','#unit'];
+            // for(var i=0; i<input.length; i++)
+            // {
+            //     if($(input[i]).val() == '')
+            //     {
+            //         $(input[i]).css("border", "1px solid red");
+            //         return;
+            //     }else
+            //     {
+            //         $(input[i]).css("border","");
+            //     }
+            // }
+        // }
+        else if(categoryId=='item_code')
         {
             $('#item_code').val(selectedValue);
             formData.append('item_code1', selectedValue);
@@ -1030,13 +1060,6 @@ class Purchase {
                     }
                     else if(categoryId=='product')
                     {
-                        var dropdownElement= $('#flavor');
-                    }else if(categoryId=='flavor')
-                    {
-                        var dropdownElement= $('#unit');
-                    }
-                    else if(categoryId=='unit')
-                    {
                         $.each(response, function (index, item)
                         {
                             $('#item_code').val(item.name);
@@ -1044,6 +1067,14 @@ class Purchase {
                         });
                         return;
                     }
+                    // else if(categoryId=='flavor')
+                    // {
+                    //     var dropdownElement= $('#unit');
+                    // }
+                    // else if(categoryId=='unit')
+                    // {
+                       
+                    // }
                     dropdownElement.empty();
                     dropdownElement.append($('<option>').text('Select').val(''));
 
@@ -1056,12 +1087,12 @@ class Purchase {
                 {
                     // console.log(status);
                     var dropdownElements = [
-                        $('#brand'),$('#product'),$('#flavor'),$('#unit'),$('#category')
+                        $('#brand'),$('#product'),$('#category')
                     ];
                     for(var i=0;i<dropdownElements.length;i++)
                     {
                         var dropdownElement=dropdownElements[i];
-                        if(i!=4)
+                        if(i!=2)
                         {
                             dropdownElement.empty();
                         }
@@ -1084,21 +1115,6 @@ class Purchase {
                                     dropdownElement.append($('<option>').text(item.product).val(item.product));
                                 }
                             }else if(i==2)
-                            {
-                                if (!checkDuplicate[item.flavor]) 
-                                {
-                                    checkDuplicate[item.flavor] = true;
-                                    dropdownElement.append($('<option>').text(item.flavor).val(item.flavor));
-                                }
-                            }
-                            else if(i==3)
-                            {
-                                if (!checkDuplicate[item.unit]) 
-                                {
-                                    checkDuplicate[item.unit] = true;
-                                    dropdownElement.append($('<option>').text(item.unit).val(item.unit));
-                                }
-                            }else if(i==4)
                             {
                                 $('#category').val(item.category);
                             }
@@ -1135,7 +1151,8 @@ class Purchase {
         let basePer=$('#basePer').val();
         let mrpPrice=$('#mrpPrice').val();
         let salePrice=$('#salePrice').val();
-        var input=['#category','#brand','#product','#flavor','#unit','#location','#expDate','#gst',,'#qty','#price','#mrpPrice','#salePrice',];
+        let unitQty=$('#unitQty').val();
+        var input=['#category','#brand','#product','#flavor','#unit','#location','#expDate','#gst',,'#qty','#price','#mrpPrice','#salePrice','#unitQty'];
         for(let i=0; i<input.length; i++)
         {
             if($(input[i]).val() == '')
@@ -1165,17 +1182,26 @@ class Purchase {
             basePer:basePer,
             mrpPrice:mrpPrice,
             salePrice:salePrice,
+            unitQty:unitQty,
         };
 
         let existingItems = localStorage.getItem('items');
         let itemsArray = existingItems ? JSON.parse(existingItems) : [];
         let itemExists = itemsArray.some(item => item.item_code === item_code);
 
-        if (!itemExists) {
+        if (!itemExists) 
+        {
             itemsArray.push(newItem);
             localStorage.setItem('items', JSON.stringify(itemsArray));
             this.fetchItems();
-        } else {
+            var input1=['#flavor','#unit','#location','#expDate','#gst',,'#qty','#price','#mrpPrice','#salePrice','#unitQty',`#item_code`,`#gstPer`,`#basePer`];
+            for(let i=0; i<input1.length; i++)
+            {
+                $(input1[i]).val('')
+            }
+        }
+        else
+        {
             // Handle case when item_code already exists
             console.log('Item with the same item_code already exists.');
             Swal.fire({
@@ -1201,7 +1227,7 @@ class Purchase {
                     row.innerHTML = `
                         <td>${index + 1}</td>
                         <td>${item.category} - ${item.brand} - ${item.product} - ${item.flavor}</td>
-                        <td>${item.unit}</td>
+                        <td>${item.unit}-${item.unitQty}</td>
                         <td>${item.gst}</td>
                         <td>${item.qty}</td>
                         <td>${item.gstPer}</td>
@@ -1231,7 +1257,8 @@ class Purchase {
         });
     }
 
-    deleteItem(index) {
+    deleteItem(index) 
+    {
         let items = JSON.parse(localStorage.getItem('items'));
         items.splice(index, 1);
         localStorage.setItem('items', JSON.stringify(items));
@@ -1301,13 +1328,37 @@ class Purchase {
         });
     }
 
-    viewPurchaseRecord()
+    viewPurchaseRecord(sta)
     {
+        if(sta==1)
+        {
+            var fromDate=$('#datefrom').val();
+            var toDate=$('#dateto').val();
+            var input=['#datefrom','#dateto'];
+            for(var i=0; i<input.length; i++)
+            {
+                if($(input[i]).val() == '')
+                {
+                    $(input[i]).css("border", "1px solid red");
+                    return;
+                }else
+                {
+                    $(input[i]).css("border","");
+                }
+            }
+        }else if(sta==0)
+        {
+            var fromDate='';
+            var toDate='';
+        }
         let log= $.ajax({
             url: 'ajax/fetch_master.php',
             type: 'GET',
             data: {
                 purViewRecord:'purViewRecord',
+                fromDate:fromDate,
+                toDate:toDate,
+                sta:sta,
             },
             dataType:'json',
             success: function (response) 
@@ -1355,7 +1406,7 @@ class Purchase {
                             const rowHTML = `<tr>
                                                 <td>${index + 1}</td>
                                                 <td>${item.category} - ${item.brand} - ${item.product} - ${item.flavor}</td>
-                                                <td>${item.unit}</td>
+                                                <td>${item.unit}-${item.unitQty}</td>
                                                 <td>${item.gst}</td>
                                                 <td>${item.qty}</td>
                                                 <td>${item.gstprice}</td>
@@ -1388,6 +1439,7 @@ class Stock{
     constructor() 
     {
         this.initializeTabs();
+        this.category();
     }
     initializeTabs()
     {
@@ -1407,7 +1459,8 @@ class Stock{
                 {
                     const rowHTML = `<tr>
                                         <td>${index + 1}</td>
-                                        <td>${item.category} - ${item.brand} - ${item.product} - ${item.flavor}</td>
+                                        <td>${item.category}</td>
+                                        <td>${item.brand} - ${item.product} - ${item.flavor}</td>
                                         <td>${item.unit}</td>
                                         <td>${item.total_qty}</td>
                                         <td>${item.item_code}</td>
@@ -1416,7 +1469,7 @@ class Stock{
                 });
             }
         });
-
+        
         const tabElements = document.querySelectorAll('.cat');
         tabElements.forEach(tabName => {
             tabName.addEventListener('click', () => {
@@ -1427,14 +1480,72 @@ class Stock{
                 if(tabName.id=='viewExpiry')
                 {   
                     $('#stockQty').hide();
+                    $('#stockByCodeData').hide();
+                    $('#allStockData').hide();
                     $('#stockExpiry').show();
                     vm.viewExpiryRecord();
                 }else if(tabName.id=='stockbox')
                 {
                     $('#stockExpiry').hide();
+                    $('#stockByCodeData').hide();
+                    $('#allStockData').hide();
                     $('#stockQty').show();
+                }else if(tabName.id=='stockbyCode')
+                {
+                    $('#stockQty').hide();
+                    $('#stockExpiry').hide();
+                    $('#allStockData').hide();
+                    $('#stockByCodeData').show();
+                    vm.ItemCodeRecord();
+
+                }else if(tabName.id=='allStock')
+                {
+                    $('#stockQty').hide();
+                    $('#stockExpiry').hide();
+                    $('#stockByCodeData').hide();
+                    $('#allStockData').show();
+                    vm.allStock();
                 }
             });
+        });
+    }
+    category()
+    {
+        $.ajax({
+            url: 'ajax/fetch_master.php',
+            type: 'GET',
+            data: {
+                purchase: 'category'
+            },
+            success: function (response) 
+            {
+                var data = JSON.parse(response);
+                var dropdownElement = $('#categoryFilter');
+                    dropdownElement.empty();
+                    dropdownElement.append($('<option>').text('Select').val(''));
+                    $.each(data, function (index, item) 
+                    {
+                        dropdownElement.append($('<option>').text(item.category).val(item.category));
+                    });
+            }
+        });
+
+        document.getElementById('categoryFilter').addEventListener('change', function() {
+            const selectedCategory = this.value;
+            if (selectedCategory === '') 
+            {
+                $('#itemTableBoady tr').show();
+            }else 
+            {
+                $('#itemTableBoady tr').hide();
+                $('#itemTableBoady tr').each(function() 
+                {
+                    if ($(this).find('td:nth-child(2)').text() == selectedCategory) 
+                    {
+                        $(this).show();
+                    }
+                });
+            }
         });
     }
     viewExpiryRecord()
@@ -1465,32 +1576,111 @@ class Stock{
             }
         });
     }
+    ItemCodeRecord()
+    {
+        let log= $.ajax({
+            url: 'ajax/fetch_master.php',
+            type: 'GET',
+            data: {
+                codeData:'codeData',
+            },
+            dataType:'json',
+            success: function (response) 
+            {
+                const tbodyElement = document.getElementById('itemCodeBoady');
+                tbodyElement.innerHTML = '';
+                response.forEach((item,index)=> 
+                {
+                    const rowHTML = `<tr>
+                                        <td>${index + 1}</td>
+                                        <td>${item.category}</td>
+                                        <td>${item.brand} - ${item.product}</td>
+                                        <td>${item.total_qty}</td>
+                                        <td>${item.item_code}</td>
+                                    </tr>`;
+                        tbodyElement.innerHTML += rowHTML;
+                });
+            }
+        });
+    }
+    allStock()
+    {
+        let log= $.ajax({
+            url: 'ajax/fetch_master.php',
+            type: 'GET',
+            data: {
+                allStock:'stock',
+            },
+            dataType:'json',
+            success: function (response) 
+            {
+                const tbodyElement = document.getElementById('allStockDataItems');
+                tbodyElement.innerHTML = '';
+                response.forEach((item,index)=> 
+                {
+                    const rowHTML = `<tr>
+                                        <td>${index + 1}</td>
+                                        <td>${item.category}</td>
+                                        <td>${item.brand} - ${item.product} - ${item.flavor}</td>
+                                        <td>${item.unit} - ${item.unitQty}</td>
+                                        <td>${item.location}</td>
+                                        <td>${item.baseprice}</td>
+                                        <td>${item.gstprice}</td>
+                                        <td>${item.saleprice}</td>
+                                        <td>${item.qty}</td>
+                                        <td>${item.item_code}</td>
+                                    </tr>`;
+                        tbodyElement.innerHTML += rowHTML;
+                });
+            }
+        });
+    }
 }
 
 class Invoice
 {
     constructor()
     {
+        this.ids = [
+            { id: 'category', purchase: 'category' },
+            { id: 'flavor', purchase: 'flavor' },
+        ];
         this.initializeTabs();
     }
     initializeTabs()
     {
         const vm=this;
-        $.ajax({
-            url:'ajax/fetch_master.php',
-            type :'POST',
-            dataType:'json',
-            data:{InvoiceCate:'category'},
-            success: function(response)
-            {
-                var dropdownElement = $('#category');
-                dropdownElement.empty();
-                dropdownElement.append($('<option>').text('Select').val(''));
-                $.each(response, function (index, item) 
+        this.ids.forEach(idss =>{
+            $.ajax({
+                url:'ajax/fetch_master.php',
+                type :'POST',
+                dataType:'json',
+                data:{InvoiceCate:'category',sell: idss.purchase},
+                success: function(response)
                 {
-                    dropdownElement.append($('<option>').text(item.category).val(item.category));
-                });
-            }
+                    // var dropdownElement = $('#category');
+                    // dropdownElement.empty();
+                    // dropdownElement.append($('<option>').text('Select').val(''));
+                    // $.each(response, function (index, item) 
+                    // {
+                    //     dropdownElement.append($('<option>').text(item.category).val(item.category));
+                    // });
+
+                    var dropdownElement = $('#' + idss.purchase);
+                    dropdownElement.empty();
+                    dropdownElement.append($('<option>').text('Select').val(''));
+                    $.each(response, function (index, item) 
+                    {
+                        if(idss.id=='category')
+                        {
+                            dropdownElement.append($('<option>').text(item.category).val(item.category));
+                        }else if(idss.id=='flavor')
+                        {
+                            dropdownElement.append($('<option>').text(item.flavor).val(item.flavor));
+                        }
+                    });
+                }
+            });
         });
 
         const tabElements = document.querySelectorAll('.cat');
@@ -1504,13 +1694,23 @@ class Invoice
                 {   
                     $('#addsellData').hide();
                     $('#viewsellData').show();
-                    vm.viewInvoiceRecord();
+                    vm.viewInvoiceRecord(0);
                 }else if(tabName.id=='addSell')
                 {
                     $('#viewsellData').hide();
                     $('#addsellData').show();
                 }
             });
+        });
+
+        const search=document.getElementById('search');
+        search.addEventListener('click',() => {
+            vm.viewInvoiceRecord(1);
+        });
+
+        const refresh=document.getElementById('refresh');
+        refresh.addEventListener('click',() => {
+            vm.viewInvoiceRecord(0);
         });
 
         //below table datafetch Data;
@@ -1532,7 +1732,7 @@ class Invoice
                 {
                     $('#indeseRows').empty();
                     var dropdownElements = [
-                        $('#brand'),$('#product'),$('#flavor'),$('#unit')
+                        $('#brand'),$('#product')
                     ];
                     if (response.length === 0)
                     {
@@ -1566,64 +1766,65 @@ class Invoice
                                     checkDuplicate[item.product] = true;
                                     dropdownElement.append($('<option>').text(item.product).val(item.product));
                                 }
-                            }else if(i==2)
-                            {
-                                if (!checkDuplicate[item.flavor]) 
-                                {
-                                    checkDuplicate[item.flavor] = true;
-                                    dropdownElement.append($('<option>').text(item.flavor).val(item.flavor));
-                                }
                             }
-                            else if(i==3)
-                            {
-                                if (!checkDuplicate[item.unit]) 
-                                {
-                                    checkDuplicate[item.unit] = true;
-                                    dropdownElement.append($('<option>').text(item.unit).val(item.unit));
-                                }
-                            }
+                            // else if(i==2)
+                            // {
+                            //     if (!checkDuplicate[item.flavor]) 
+                            //     {
+                            //         checkDuplicate[item.flavor] = true;
+                            //         dropdownElement.append($('<option>').text(item.flavor).val(item.flavor));
+                            //     }
+                            // }
+                            // else if(i==3)
+                            // {
+                            //     if (!checkDuplicate[item.unit]) 
+                            //     {
+                            //         checkDuplicate[item.unit] = true;
+                            //         dropdownElement.append($('<option>').text(item.unit).val(item.unit));
+                            //     }
+                            // }
                         });
                     }
                     var insideSell='';
                     response.forEach((item,index)=> 
                     {
                         $('#category').val(item.category);
-                         insideSell=`<div class="row"> <div class="col-md-2">
-                                    <label for="cate">Location</label>
-                                    <input type="text" class="form-control" id="location" placeholder="location..." readonly value="${item.location}">
-                                    <input type="hidden" class="id" id="id" value="${item.id}">
-                                    <input type="hidden" class="basepur" id="basepur" value="${item.baseprice}">
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="cate">Expiry</label>
-                                    <input type="date" class="form-control expDate" id="expDate" readonly value="${item.exp}">
-                                </div>
-                                <div class="col-md-1">
-                                    <label for="cate">GST %</label>
-                                    <input type="text" class="form-control gst" id="gst" readonly value="${item.gst}">
-                                </div>
-                                <div class="col-md-1">
-                                    <label for="cate">QTY</label>
-                                    <input type="text" class="form-control qty" id="qty" readonly value="${item.qty}">
-                                </div>
-                                <div class="col-md-1">
-                                    <label for="cate">MRP</label>
-                                    <input type="text" class="form-control mrpPrice" id="mrpPrice" readonly value="${item.mrpprice}">
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="cate">Sale</label>
-                                    <input type="text" class="form-control salePrice" id="salePrice" value="${item.saleprice}">
-                                </div>
-                                <div class="col-md-1">
-                                    <label for="cate">Sale Qty</label>
-                                    <input type="text" class="form-control saleqty" id="saleqty">
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="cate">Total</label>
-                                    <input type="text" class="form-control total" id="total" readonly>
-                                </div>
-                                </div>`;
-                            $('#indeseRows').append(insideSell);
+                        //  insideSell=`<div class="row"> <div class="col-md-2">
+                        //             <label for="cate">Location</label>
+                        //             <input type="text" class="form-control" id="location" placeholder="location..." readonly value="${item.location}">
+                        //             <input type="hidden" class="id" id="id" value="${item.id}">
+                        //             <input type="hidden" class="basepur" id="basepur" value="${item.baseprice}">
+                        //         </div>
+                        //         <div class="col-md-2">
+                        //             <label for="cate">Expiry</label>
+                        //             <input type="date" class="form-control expDate" id="expDate" readonly value="${item.exp}">
+                        //         </div>
+                        //         <div class="col-md-1">
+                        //             <label for="cate">GST %</label>
+                        //             <input type="text" class="form-control gst" id="gst" readonly value="${item.gst}">
+                        //         </div>
+                        //         <div class="col-md-1">
+                        //             <label for="cate">QTY</label>
+                        //             <input type="text" class="form-control qty" id="qty" readonly value="${item.qty}">
+                        //         </div>
+                        //         <div class="col-md-1">
+                        //             <label for="cate">MRP</label>
+                        //             <input type="text" class="form-control mrpPrice" id="mrpPrice" readonly value="${item.mrpprice}">
+                        //         </div>
+                        //         <div class="col-md-2">
+                        //             <label for="cate">Sale</label>
+                        //             <input type="text" class="form-control salePrice" id="salePrice" value="${item.saleprice}">
+                        //         </div>
+                        //         <div class="col-md-1">
+                        //             <label for="cate">Sale Qty</label>
+                        //             <input type="text" class="form-control saleqty" id="saleqty">
+                        //         </div>
+                        //         <div class="col-md-2">
+                        //             <label for="cate">Total</label>
+                        //             <input type="text" class="form-control total" id="total" readonly>
+                        //         </div>
+                        //         </div>`;
+                        //     $('#indeseRows').append(insideSell);
                     });
                 }
             });
@@ -1631,7 +1832,7 @@ class Invoice
 
 
         //onchange
-        const categories = document.querySelectorAll('#category, #brand, #product, #flavor, #unit');
+        const categories = document.querySelectorAll('#category, #brand, #product, #flavor, #unit, #unitQty');
         categories.forEach(category => {
             category.addEventListener('change', function(event) 
             {
@@ -1647,7 +1848,7 @@ class Invoice
         const sell = document.getElementById('addPurchaseItem');
         sell.addEventListener('click',function(event)
         {
-            var input=['#item_code','#category','#brand','#product','#flavor','#unit'];
+            var input=['#item_code','#category','#brand','#product','#flavor','#unit','#unitQty'];
             for(var i=0; i<input.length; i++)
             {
                 if($(input[i]).val() == '')
@@ -1659,13 +1860,13 @@ class Invoice
                     $(input[i]).css("border","");
                 }
             }
-
             let category=$('#category').val();
             let brand=$('#brand').val();
             let product=$('#product').val();
             let flavor=$('#flavor').val();
             let unit=$('#unit').val();
             let item_code=$('#item_code').val();
+            let unitQty=$('#unitQty').val();
             const rowContainers = $('#indeseRows .row');
             const saleItems = [];
             if(rowContainers.length > 0) 
@@ -1716,7 +1917,8 @@ class Invoice
                             total:total.toFixed(2),
                             oldqty:qty,
                             basepur:basepur,
-                            item_code:item_code
+                            item_code:item_code,
+                            unitQty:unitQty
                         };
 
                         const existingSaleItems = JSON.parse(localStorage.getItem('saleItems')) || [];
@@ -1805,6 +2007,22 @@ class Invoice
         {
             vm.InvoiceData();
         });
+
+        const cancelsell = document.getElementById('cancelsell');
+        cancelsell.addEventListener('click', (event) => 
+        {
+            localStorage.removeItem('saleItems');
+            const tableBody = document.getElementById('saleTableBoady');
+            tableBody.innerHTML = '';
+            $('#custName').val('');
+            $('#custgst').val('');
+            $('#custmobile').val('');
+            $('#custadds').val('');
+            $('#totalAmt').val('');
+            $('#gstsel').val('');
+            $('#pay').val('');
+            vm.fetchItems();
+        });
     }
 
     fetchDatas(selectedValue,select_Id)
@@ -1812,8 +2030,8 @@ class Invoice
         let vm=this;
         var formData = new FormData();
         formData.append('id', select_Id);
-        $('#item_code').val('');
-        if (select_Id == 'category') 
+        // $('#item_code').val('');
+        if(select_Id == 'category')
         {
             formData.append('category', selectedValue);
         }else if (select_Id == 'brand')
@@ -1828,23 +2046,69 @@ class Invoice
             formData.append('category', category);
             formData.append('brand', brand);
             formData.append('product', selectedValue);
-        }else if(select_Id=='flavor')
+
+        }
+        else if(select_Id=='flavor')
         {
             var category= $('#category').val();
             var brand= $('#brand').val();
             var product= $('#product').val();
+            var item_code= $('#item_code').val();
             formData.append('category', category);
             formData.append('brand', brand);
             formData.append('product', product);
             formData.append('flavor', selectedValue);
+            formData.append('item_code', item_code);
+
+            var input=['#category','#brand','#product','#flavor','#item_code'];
+            for(var i=0; i<input.length; i++)
+            {
+                if($(input[i]).val() == '')
+                {
+                    $(input[i]).css("border", "1px solid red");
+                    return;
+                }else
+                {
+                    $(input[i]).css("border","");
+                }
+            }
+
         }else if(select_Id=='unit')
         {
             var category=$('#category').val();
             var brand=$('#brand').val();
             var product=$('#product').val();
             var flavor=$('#flavor').val();
+            var item_code= $('#item_code').val();
+            // var input=['#category','#brand','#product','#flavor','#unit'];
+            // for(var i=0; i<input.length; i++)
+            // {
+            //     if($(input[i]).val() == '')
+            //     {
+            //         $(input[i]).css("border", "1px solid red");
+            //         return;
+            //     }else
+            //     {
+            //         $(input[i]).css("border","");
+            //     }
+            // }
 
-            var input=['#category','#brand','#product','#flavor','#unit'];
+            formData.append('category', category);
+            formData.append('brand', brand);
+            formData.append('product', product);
+            formData.append('flavor', flavor);
+            formData.append('unit', selectedValue);
+            formData.append('item_code', item_code);
+        }
+        else if(select_Id=='unitQty')
+        {
+            var category=$('#category').val();
+            var brand=$('#brand').val();
+            var product=$('#product').val();
+            var flavor=$('#flavor').val();
+            var item_code= $('#item_code').val();
+            var unit= $('#unit').val();
+            var input=['#category','#brand','#product','#flavor','#unit','#unitQty'];
             for(var i=0; i<input.length; i++)
             {
                 if($(input[i]).val() == '')
@@ -1861,7 +2125,9 @@ class Invoice
             formData.append('brand', brand);
             formData.append('product', product);
             formData.append('flavor', flavor);
-            formData.append('unit', selectedValue);
+            formData.append('unit', unit);
+            formData.append('unitQty', selectedValue);
+            formData.append('item_code', item_code);
         }
 
         let log=$.ajax({
@@ -1883,7 +2149,10 @@ class Invoice
                 }
                 else if(select_Id=='product')
                 {
-                    var dropdownElement= $('#flavor');
+                    // var dropdownElement= $('#flavor');
+                    var item_code=response[0].name;
+                    $('#item_code').val(item_code);
+                    return;
                 }
                 else if(select_Id=='flavor')
                 {
@@ -1891,9 +2160,14 @@ class Invoice
                 }
                 else if(select_Id=='unit')
                 {
-                    var item_code=response[0].name;
-                    $('#item_code').val(item_code);
-                    vm.loadAdjuctData(item_code);
+                    var dropdownElement= $('#unitQty');
+                }
+                else if(select_Id=='unitQty')
+                {
+                    // console.log(response);
+                    // var item_code=response[0].name;
+                    // $('#item_code').val(item_code);
+                    vm.loadAdjuctData(response);
                     return;
                 }
                 dropdownElement.empty();
@@ -1908,18 +2182,18 @@ class Invoice
     }
     loadAdjuctData(response)
     {
-        let log=$.ajax({
-            url:'ajax/fetch_master.php',
-            type :'POST',
-            dataType:'json',
-            data:{sellMaster:response},
-            success: function(status)
-            {
-                $('#indeseRows').empty();
+        console.log(response);
+        // let log=$.ajax({
+        //     url:'ajax/fetch_master.php',
+        //     type :'POST',
+        //     dataType:'json',
+        //     data:{sellMaster:response},
+        //     success: function(status)
+        //     {
+        //         $('#indeseRows').empty();
                 var insideSell='';
-                status.forEach((item,index)=> 
+                response.forEach((item,index)=>
                 {
-                    $('#category').val(item.category);
                         insideSell=`<div class="row"> <div class="col-md-2">
                                 <label for="cate">Location</label>
                                 <input type="text" class="form-control" id="location" placeholder="location..." readonly value="${item.location}">
@@ -1942,12 +2216,12 @@ class Invoice
                                 <label for="cate">MRP</label>
                                 <input type="text" class="form-control mrpPrice" id="mrpPrice" readonly value="${item.mrpprice}">
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-1">
                                 <label for="cate">Sale</label>
                                 <input type="text" class="form-control salePrice" id="salePrice" value="${item.saleprice}">
                             </div>
-                            <div class="col-md-1">
-                                <label for="cate">SaleQTY</label>
+                            <div class="col-md-2">
+                                <label for="cate">Sale QTY</label>
                                 <input type="text" class="form-control saleqty" id="saleqty">
                             </div>
                             <div class="col-md-2">
@@ -1957,8 +2231,8 @@ class Invoice
                             </div>`;
                             $('#indeseRows').append(insideSell);
                     });
-            }
-        });
+        //     }
+        // });
     }
     fetchItems()
     {
@@ -1975,7 +2249,7 @@ class Invoice
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${index + 1}</td>
-                    <td>${item.category} - ${item.brand} - ${item.product} - ${item.flavor} - ${item.unit}</td>
+                    <td>${item.category} - ${item.brand} - ${item.product} - ${item.flavor} - ${item.unit} - ${item.unitQty}</td>
                     <td>${item.gst}</td>
                     <td>${item.saleQty}</td>
                     <td>${item.perItem}</td>
@@ -2026,6 +2300,9 @@ class Invoice
         }
 
 
+        let custgst=$('#custgst').val();
+        let custmobile=$('#custmobile').val();
+        let custadds=$('#custadds').val();
         let custName=$('#custName').val();
         let saleDate=$('#saleDate').val();
         let totalAmt=$('#totalAmt').val();
@@ -2044,12 +2321,15 @@ class Invoice
                 totalAmt:totalAmt,
                 saleitemList :items,
                 gstsel:gstsel,
-                pay:pay
+                pay:pay,
+                custgst:custgst,
+                custmobile:custmobile,
+                custadds:custadds
             },
             success: function(response)
             {
-                console.log(response);
-                console.log(response.message);
+                // console.log(response);
+                // console.log(response.message);
                 if(response.message=="Submited successfully..")
                 {
                     localStorage.removeItem('saleItems');
@@ -2061,6 +2341,11 @@ class Invoice
                         icon: 'success',
                         text: 'Submited successfully..',
                     })
+
+                    for(var i=0; i<input.length; i++)
+                    {
+                        $(input[i]).val('');
+                    }
                     return;
 
                 }else
@@ -2076,19 +2361,44 @@ class Invoice
                 
             }
         });
-        // console.log(log);
     }
-    viewInvoiceRecord()
+    viewInvoiceRecord(sta)
     {
+        // console.log(sta);
+        if(sta==1)
+        {
+            var fromDate=$('#datefrom').val();
+            var toDate=$('#dateto').val();
+            var input=['#datefrom','#dateto'];
+            for(var i=0; i<input.length; i++)
+            {
+                if($(input[i]).val() == '')
+                {
+                    $(input[i]).css("border", "1px solid red");
+                    return;
+                }else
+                {
+                    $(input[i]).css("border","");
+                }
+            }
+        }else if(sta==0)
+        {
+            var fromDate='';
+            var toDate='';
+        }
         let log= $.ajax({
             url: 'ajax/fetch_master.php',
             type: 'GET',
             data: {
                 invoiceRecord:'invoiceRecord',
+                sta:sta,
+                fromDate:fromDate,
+                toDate:toDate,
             },
             dataType:'json',
             success: function (response) 
             {
+                console.log(response);
                 const tbodyElement = document.getElementById('viewSaleDataTable');
                 tbodyElement.innerHTML = '';
                 response.forEach(rowData => 
@@ -2096,17 +2406,24 @@ class Invoice
                     const rowHTML = `<tr>
                                         <td>${rowData.id}</td>
                                         <td>${rowData.custName}</td>
+                                        <td>${rowData.custGst}</td>
+                                        <td>${rowData.custMobile}</td>
+                                        <td>${rowData.custAdds}</td>
                                         <td>${rowData.date}</td>
                                         <td>${rowData.payMode}</td>
                                         <td>${rowData.totalAmt}</td>
                                         <td>
-                                            <button class="btn btn-sm btn-primary view-button" data-id="${rowData.id}">View</button>
+                                            <button class="btn btn-sm btn-primary view-button" data-id="${rowData.id}">VIEW</button>
                                         </td>
+                                        <td>
+                                        <button class="btn btn-sm btn-danger print-button" data-id="${rowData.id}">PRINT</button>
+                                    </td>
                                     </tr>`;
                         tbodyElement.innerHTML += rowHTML;
                 });
             }
         });
+        // console.log(log)
 
         document.addEventListener('click', event => 
         {
@@ -2154,6 +2471,11 @@ class Invoice
                     }
                 });
 
+            }else if(event.target.classList.contains('print-button'))
+            {
+                const row = event.target.closest('tr');
+                let cat_id = row.querySelector('.print-button').getAttribute('data-id');
+                window.location="invoice.php?invoice_no="+cat_id;
             }
         });
         document.addEventListener('click', event => 
@@ -2195,6 +2517,7 @@ class Profit
                                         <td>${item.profitPer.toFixed(2)}</td>
                                         <td>${item.qty}</td>
                                         <td>${item.totalPfofit.toFixed(2)}</td>
+                                        <td>${item.date}</td>
                                         <td>${item.ivoice_id}</td>
                                     </tr>`;
                         tbodyElement.innerHTML += rowHTML;
@@ -2202,5 +2525,100 @@ class Profit
             }
         });
         console.log(log)
+    }
+}
+
+class FinalInvoice
+{
+    loadTableData() 
+    {
+        var currentUrl = new URL(window.location);
+        var invoiceNo = currentUrl.searchParams.get("invoice_no");
+        if (invoiceNo) 
+        {
+            let log= $.ajax({
+                url: 'ajax/fetch_master.php',
+                type: 'GET',
+                data: {
+                    invoiceNo:invoiceNo,
+                },
+                dataType:'json',
+                success: function (response) 
+                {
+                    var custName = response[0].custName;
+                    var custMobile = response[0].custMobile;
+                    var custAdds = response[0].custAdds;
+                    var custGst = response[0].custGst;
+                    var payMode = response[0].payMode;
+                    var date1 = response[0].date;
+
+                    var nameSpan = document.getElementById("name");
+                    var addsSpan = document.getElementById("adds");
+                    var mobileSpan = document.getElementById("mobile");
+                    var paySpan = document.getElementById("pay");
+                    var gstSpan = document.getElementById("gst");
+                    nameSpan.textContent = custName;
+                    addsSpan.textContent = custAdds;
+                    mobileSpan.textContent = custMobile;
+                    gstSpan.textContent = custGst;
+                    paySpan.textContent = payMode;
+
+                    var inv = document.getElementById("inv");
+                    var date = document.getElementById("date");
+                    inv.textContent = invoiceNo;
+
+                    date.textContent = date1;
+
+                    let log= $.ajax({
+                        url: 'ajax/fetch_master.php',
+                        type: 'GET',
+                        data: {
+                            invoiceRecordItem:'invoiceRecordItem',
+                            inv_id:invoiceNo,
+                        },
+                        dataType:'json',
+                        success: function (response) 
+                        {
+                            console.log(response);
+                            const tbodyElement = document.getElementById('tableDataInvoice');
+                            tbodyElement.innerHTML = '';
+                            var totalAmount=0;
+                            response.forEach((item,index)=> 
+                            {
+                                const rowHTML = `<tr>
+                                                    <td>${index + 1}</td>
+                                                    <td>${item.category} - ${item.brand} - ${item.product} - ${item.flavor} - ${item.unitQty}</td>
+                                                    <td>${item.gst}</td>
+                                                    <td>${item.qty}</td>
+                                                    <td>${item.rate}</td>
+                                                    <td>${item.amount}</td>
+                                                    <td>${item.sgst}</td>
+                                                    <td>${item.cgst}</td>
+                                                    <td>${item.igst}</td>
+                                                    <td>${item.totalAmount}</td>
+                                                </tr>`;
+                                    tbodyElement.innerHTML += rowHTML;
+                            });
+                            response.forEach(item => {
+                                totalAmount += parseFloat(item.totalAmount);
+                            });
+                            // console.log(totalAmount);
+                            const totalAmtElement = document.getElementById('totalAmt');
+                            totalAmtElement.textContent = `${totalAmount}`;
+                            window.print();
+                        }
+                    });
+    
+                    
+                }
+            });
+            window.onafterprint = function(event)
+            {
+                window.location.href ="sell.php";
+            };
+        }else
+        {
+            console.log("Invoice number not found in the URL.");
+        }
     }
 }

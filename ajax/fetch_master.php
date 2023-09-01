@@ -122,6 +122,12 @@ if(isset($_GET['purchase']))
     }else if($purchaseno=='gst')
     {
         $fetchStmt=$conn->prepare("SELECT * FROM `gst`");
+    }else if($purchaseno=='flavor')
+    {
+        $fetchStmt=$conn->prepare("SELECT * FROM `flavor`");
+    }else if($purchaseno=='unit')
+    {
+        $fetchStmt=$conn->prepare("SELECT * FROM `unit`");
     }
     
     $fetchStmt->execute();
@@ -160,31 +166,36 @@ if(isset($_POST['id1']))
         $brand=$_POST['brand1'];
         $product=$_POST['product1'];
 
-        $fetchStmt=$conn->prepare("SELECT DISTINCT `flavor` AS `name` FROM `item` WHERE `category` = ? AND `brand` = ? AND `product` = ?");
-        $fetchStmt->bind_param("sss", $category,$brand,$product); 
+        // $fetchStmt=$conn->prepare("SELECT DISTINCT `flavor` AS `name` FROM `item` WHERE `category` = ? AND `brand` = ? AND `product` = ?");
+        // $fetchStmt->bind_param("sss", $category,$brand,$product); 
+
+        $fetchStmt=$conn->prepare("SELECT DISTINCT `item_code` AS `name` FROM `item` WHERE `category` = ? AND `brand` = ? AND `product` = ?");
+        $fetchStmt->bind_param("sss", $category,$brand,$product);
     }
-    else if($inputId=='flavor')
-    {
-        $category=$_POST['category1'];
-        $brand=$_POST['brand1'];
-        $product=$_POST['product1'];
-        $flavor=$_POST['flavor1'];
+    // else if($inputId=='flavor')
+    // {
+    //     $category=$_POST['category1'];
+    //     $brand=$_POST['brand1'];
+    //     $product=$_POST['product1'];
+    //     $flavor=$_POST['flavor1'];
 
-        $fetchStmt=$conn->prepare("SELECT DISTINCT `unit` AS `name` FROM `item` WHERE `category` = ? AND `brand` = ? AND `product` = ? AND `flavor` = ?");
-        $fetchStmt->bind_param("ssss", $category,$brand,$product,$flavor); 
+    //     $fetchStmt=$conn->prepare("SELECT DISTINCT `unit` AS `name` FROM `item` WHERE `category` = ? AND `brand` = ? AND `product` = ? AND `flavor` = ?");
+    //     $fetchStmt->bind_param("ssss", $category,$brand,$product,$flavor); 
 
-    }else if($inputId=='unit')
-    {
-        $category=$_POST['category1'];
-        $brand=$_POST['brand1'];
-        $product=$_POST['product1'];
-        $flavor=$_POST['flavor1'];
-        $unit=$_POST['unit1'];
+    // }
+    // else if($inputId=='unit')
+    // {
+    //     $category=$_POST['category1'];
+    //     $brand=$_POST['brand1'];
+    //     $product=$_POST['product1'];
+    //     $flavor=$_POST['flavor1'];
+    //     $unit=$_POST['unit1'];
 
-        $fetchStmt=$conn->prepare("SELECT DISTINCT `item_code` AS `name` FROM `item` WHERE `category` = ? AND `brand` = ? AND `product` = ? AND `flavor` = ? AND `unit` = ?");
-        $fetchStmt->bind_param("sssss", $category,$brand,$product,$flavor,$unit);
+        // $fetchStmt=$conn->prepare("SELECT DISTINCT `item_code` AS `name` FROM `item` WHERE `category` = ? AND `brand` = ? AND `product` = ? AND `flavor` = ? AND `unit` = ?");
+        // $fetchStmt->bind_param("sssss", $category,$brand,$product,$flavor,$unit);
 
-    }else if($inputId=='item_code')
+    // }
+    else if($inputId=='item_code')
     {
         $item_code1=$_POST['item_code1'];
 
@@ -206,7 +217,19 @@ if(isset($_POST['id1']))
 
 if(isset($_GET['purViewRecord']))
 {
-    $fetchStmt=$conn->prepare("SELECT * FROM `purchase`");
+    $sta=$_GET['sta'];
+    $fromDate=$_GET['fromDate'];
+    $toDate=$_GET['toDate'];
+    if($sta==0)
+    {
+        $fetchStmt=$conn->prepare("SELECT * FROM `purchase` ORDER BY `id` DESC");
+    }else
+    {
+        $fetchStmt = $conn->prepare("SELECT * FROM `purchase` WHERE `purchase_date` BETWEEN ? AND ? ORDER BY `id` ASC");
+        $fetchStmt->bind_param('ss', $fromDate, $toDate);
+    }
+
+    // $fetchStmt=$conn->prepare("SELECT * FROM `purchase`");
     $fetchStmt->execute();
     $result=$fetchStmt->get_result();
 
@@ -239,7 +262,43 @@ if(isset($_GET['purViewRecordItem']))
 
 if(isset($_GET['stock']))
 {
-    $fetchStmt = $conn->prepare("SELECT *, SUM(qty) AS total_qty FROM `stock` WHERE qty != 0 GROUP BY item_code");
+    $fetchStmt = $conn->prepare("SELECT *, SUM(qty) AS total_qty FROM `stock` WHERE qty != 0  GROUP BY item_code, flavor, unit, unitQty");
+    $fetchStmt->execute();
+
+    $result = $fetchStmt->get_result();
+
+    $rows = array();
+    while ($row = $result->fetch_assoc()) {
+        $rows[] = $row;
+    }
+
+    echo json_encode($rows);
+
+    $fetchStmt->close();
+
+}
+
+if(isset($_GET['codeData']))
+{
+    $fetchStmt = $conn->prepare("SELECT *, SUM(qty) AS total_qty FROM `stock` WHERE qty != 0  GROUP BY item_code");
+    $fetchStmt->execute();
+
+    $result = $fetchStmt->get_result();
+
+    $rows = array();
+    while ($row = $result->fetch_assoc()) {
+        $rows[] = $row;
+    }
+
+    echo json_encode($rows);
+
+    $fetchStmt->close();
+
+}
+
+if(isset($_GET['allStock']))
+{
+    $fetchStmt = $conn->prepare("SELECT * FROM `stock` WHERE qty != 0");
     $fetchStmt->execute();
 
     $result = $fetchStmt->get_result();
@@ -279,7 +338,14 @@ if(isset($_POST['sellMaster']))
 
 if(isset($_POST['InvoiceCate']))
 {
-    $category=$conn->prepare("SELECT DISTINCT `category` FROM `stock`");
+    $sell=$_POST['sell'];
+    if($sell=='category')
+    {
+        $category=$conn->prepare("SELECT DISTINCT `category` FROM `stock`");
+    }else
+    {
+        $category=$conn->prepare("SELECT DISTINCT `flavor` FROM `stock`");
+    }
     $category->execute();
     $resultCat=$category->get_result();
     $cate = array();
@@ -290,7 +356,6 @@ if(isset($_POST['InvoiceCate']))
     $category->close();
     echo json_encode($cate);
 }
-
 
 
 
@@ -319,7 +384,7 @@ if(isset($_POST['id']))
         $brand=$_POST['brand'];
         $product=$_POST['product'];
 
-        $fetchStmt=$conn->prepare("SELECT DISTINCT `flavor` AS `name` FROM `stock` WHERE `category` = ? AND `brand` = ? AND `product` = ? AND `qty` != 0");
+        $fetchStmt=$conn->prepare("SELECT DISTINCT `item_code` AS `name` FROM `stock` WHERE `category` = ? AND `brand` = ? AND `product` = ? AND `qty` != 0");
         $fetchStmt->bind_param("sss",$category,$brand,$product);
     }
     else if($select_Id=='flavor')
@@ -328,8 +393,10 @@ if(isset($_POST['id']))
         $brand=$_POST['brand'];
         $product=$_POST['product'];
         $flavor=$_POST['flavor'];
-        $fetchStmt=$conn->prepare("SELECT DISTINCT `unit` AS `name` FROM `stock` WHERE `category` = ? AND `brand` = ? AND `product` = ? AND `flavor` = ? AND `qty` != 0");
-        $fetchStmt->bind_param("ssss",$category,$brand,$product,$flavor);
+        $item_code=$_POST['item_code'];
+
+        $fetchStmt=$conn->prepare("SELECT DISTINCT `unit` AS `name` FROM `stock` WHERE `category` = ? AND `brand` = ? AND `product` = ? AND `flavor` = ? AND `item_code` = ? AND `qty` != 0");
+        $fetchStmt->bind_param("sssss",$category,$brand,$product,$flavor,$item_code);
     }else if($select_Id=='unit')
     {
         $category=$_POST['category'];
@@ -337,8 +404,21 @@ if(isset($_POST['id']))
         $product=$_POST['product'];
         $flavor=$_POST['flavor'];
         $unit=$_POST['unit'];
-        $fetchStmt=$conn->prepare("SELECT DISTINCT `item_code` AS `name` FROM `stock` WHERE `category` = ? AND `brand` = ? AND `product` = ? AND `flavor` = ? AND `unit` = ? AND `qty` != 0");
-        $fetchStmt->bind_param("sssss",$category,$brand,$product,$flavor,$unit);
+        $item_code=$_POST['item_code'];
+        $fetchStmt=$conn->prepare("SELECT DISTINCT `unitQty` AS `name` FROM `stock` WHERE `category` = ? AND `brand` = ? AND `product` = ? AND `flavor` = ? AND `unit` = ? AND `item_code` = ? AND `qty` != 0");
+        $fetchStmt->bind_param("ssssss",$category,$brand,$product,$flavor,$unit,$item_code);
+
+    }else if($select_Id=='unitQty')
+    {
+        $category=$_POST['category'];
+        $brand=$_POST['brand'];
+        $product=$_POST['product'];
+        $flavor=$_POST['flavor'];
+        $unit=$_POST['unit'];
+        $item_code=$_POST['item_code'];
+        $unitQty=$_POST['unitQty'];
+        $fetchStmt=$conn->prepare("SELECT * FROM `stock` WHERE `flavor` = ? AND `unit` = ? AND `unitQty` = ? AND `item_code` = ? AND `qty` != 0");
+        $fetchStmt->bind_param("ssss",$flavor,$unit,$unitQty,$item_code);
     }
 
     
@@ -357,7 +437,17 @@ if(isset($_POST['id']))
 //invoices
 if(isset($_GET['invoiceRecord']))
 {
-    $fetchStmt=$conn->prepare("SELECT * FROM `invoice`");
+        $sta=$_GET['sta'];
+        $fromDate=$_GET['fromDate'];
+        $toDate=$_GET['toDate'];
+        if($sta==0)
+        {
+            $fetchStmt=$conn->prepare("SELECT * FROM `invoice` ORDER BY `id` DESC");
+        }else
+        {
+            $fetchStmt = $conn->prepare("SELECT * FROM `invoice` WHERE `date` BETWEEN ? AND ? ORDER BY `id` ASC");
+            $fetchStmt->bind_param('ss', $fromDate, $toDate);
+        }
     $fetchStmt->execute();
     $result=$fetchStmt->get_result();
 
@@ -392,7 +482,7 @@ if(isset($_GET['invoiceRecordItem']))
 
 if(isset($_GET['profit']))
 {
-    $fetchStmt=$conn->prepare("SELECT `profit`.*,`invoice_data`.`item_code`,`invoice_data`.`product` FROM `profit`,`invoice_data` WHERE `profit`.`ivoicedata_id`=`invoice_data`.`id`");
+    $fetchStmt=$conn->prepare("SELECT `profit`.*,`invoice_data`.`item_code`,`invoice_data`.`product`,`invoice`.`date` FROM `profit`,`invoice_data`,`invoice` WHERE `profit`.`ivoicedata_id`=`invoice_data`.`id` AND `profit`.`ivoicedata_id`=`invoice`.`id`");
     $fetchStmt->execute();
     $result=$fetchStmt->get_result();
 
@@ -410,7 +500,27 @@ if(isset($_GET['profit']))
 //invoices
 if(isset($_GET['expiry']))
 {
-    $fetchStmt = $conn->prepare("SELECT * FROM `stock` WHERE `exp` <= DATE_ADD(CURDATE(), INTERVAL 15 DAY) AND `qty` != 0");
+    $fetchStmt = $conn->prepare("SELECT * FROM `stock` WHERE `exp` <= DATE_ADD(CURDATE(), INTERVAL 180 DAY) AND `qty` != 0");
+    $fetchStmt->execute();
+    $result=$fetchStmt->get_result();
+
+    $rows=array();
+    while($row=$result->fetch_assoc())
+    {
+        $rows[] =$row;
+    }
+    echo json_encode($rows);
+    $fetchStmt->close();
+}
+
+
+
+//final Invoice
+if(isset($_GET['invoiceNo']))
+{
+    $invoiceno=$_GET['invoiceNo'];
+    $fetchStmt=$conn->prepare("SELECT * FROM `invoice` WHERE `id` = ?");
+    $fetchStmt->bind_param("i",$invoiceno);
     $fetchStmt->execute();
     $result=$fetchStmt->get_result();
 

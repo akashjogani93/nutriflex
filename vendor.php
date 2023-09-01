@@ -9,6 +9,7 @@
         }
         .active
         {
+            /* background-color: #393E46; */
             background-color: white;
         }
     </style>
@@ -20,8 +21,8 @@
                 </div>
             </div>
             <div class="box-header">
-                <div class="getSpace">
-                </div>
+                <!-- <div class="getSpace">
+                </div> -->
                 <div class="cat active" id="itembox">
                     <h6 class="box-header-names">VENDOR MASTER</h6>
                 </div>
@@ -85,12 +86,12 @@
                                 <table id="dataTable"  class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>SL.NO</th>
+                                            <th>Sl.No</th>
                                             <th>Vendor Name</th>
                                             <th>GST</th>
-                                            <th>MOBILE</th>
-                                            <th>ADDRESS</th>
-                                            <th>EDIT/DELETE</th>
+                                            <th>Mobile</th>
+                                            <th>Address</th>
+                                            <th>Edit</th>
                                         </tr>
                                     </thead>
                                     <tbody id="itemTableBoady">

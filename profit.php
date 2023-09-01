@@ -21,8 +21,8 @@
                 </div>
             </div>
             <div class="box-header">
-                <div class="getSpace">
-                </div>
+                <!-- <div class="getSpace">
+                </div> -->
                 <div class="cat active" id="addPur">
                     <h6 class="box-header-names">PROFIT DETAILS</h6>
                 </div>
@@ -44,6 +44,7 @@
                                         <th>Profit</th>
                                         <th>Qty</th>
                                         <th>Total Profit</th>
+                                        <th>Date</th>
                                         <th>Invoice</th>
                                     </tr>
                                 </thead>

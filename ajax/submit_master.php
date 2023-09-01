@@ -35,18 +35,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         }
     }
 
-    if (isset($_POST['cate']) && isset($_POST['brand']) && isset($_POST['flavor']) && isset($_POST['product']) && isset($_POST['unni']) && isset($_POST['item_code'])) 
+    if (isset($_POST['cate']) && isset($_POST['brand']) && isset($_POST['product']) && isset($_POST['item_code'])) 
     {
         $slno = $_POST['slno'];
         $value = $_POST['value'];
 
         $cate = $_POST['cate'];
         $brand = $_POST['brand'];
-        $flavor = $_POST['flavor'];
+        // $flavor = $_POST['flavor'];
         $product = $_POST['product'];
-        $unit = $_POST['unni'];
+        // $unit = $_POST['unni'];
         $item_code = $_POST['item_code'];
 
+        $flavor='';
+        $unit='';
         $item = new Item($conn);
         if($value==0)
         {
@@ -92,6 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     if (isset($_POST['custName']) && isset($_POST['saleDate']) && isset($_POST['totalAmt']) && isset($_POST['saleitemList']))
     {
         $custName = $_POST['custName'];
+        $custgst = $_POST['custgst'];
+        $custmobile = $_POST['custmobile'];
+        $custadds = $_POST['custadds'];
         $saleDate = $_POST['saleDate'];
         $totalAmt = $_POST['totalAmt'];
         $gstsel = $_POST['gstsel'];
@@ -99,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         $saleitemList=$_POST['saleitemList'];
         // echo json_encode(['message' => 'Something Went Wrong..']);
         $purchase= new Invoice($conn);
-        $purchase->invoiceData($custName, $saleDate, $totalAmt,$gstsel,$pay,$saleitemList);
+        $purchase->invoiceData($custName, $saleDate, $totalAmt,$gstsel,$pay,$saleitemList,$custgst,$custmobile,$custadds);
         
     }
 

@@ -20,8 +20,8 @@
                 </div>
             </div>
             <div class="box-header">
-                <div class="getSpace">
-                </div>
+                <!-- <div class="getSpace">
+                </div> -->
                 <div class="cat active" id="itembox">
                     <h6 class="box-header-names">ITEM MASTER</h6>
                 </div>
@@ -32,8 +32,7 @@
                 <div class="container-fluid adding-category">
                     <div class="row">
                         <div class="col-md-12">
-                            <center></br>
-                            <button class="btn btn-danger" id="toggleRows">Add Items</button></center>
+                            <button class="btn btn-danger additem" id="toggleRows">Add Items</button>
                         </div>
                     </div>
                     <div class="row hidden-rows">
@@ -60,7 +59,7 @@
                                 <input type="text" class="form-control" id="product" placeholder="Type Here...">
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <!-- <div class="col-md-2">
                             <div class="form-group">
                                 <label for="cate">Select Flavor</label>
                                 <select class="form-control" id="flavor">
@@ -75,21 +74,24 @@
                                     <option value="">Select Unit</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="cate">Item Code</label>
                                 <input type="text" class="form-control" id="item_code" placeholder="Type Here...">
                             </div>
                         </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-info" style="margin-top:25px" id="addItem">ADD</button><button class="btn btn-info" id="updateItem" style="display:none; margin-top:25px">UPDATE</button>
+                        </div>
                     </div>
                     <div class="row hidden-rows">
                         <div class="col-md-12">
-                            <center><button class="btn btn-info" id="addItem">ADD</button><button class="btn btn-info" id="updateItem" style="display:none;">UPDATE</button></center>
-                            <div id="response"></div>
+                            <!-- <center><button class="btn btn-info" id="addItem">ADD</button><button class="btn btn-info" id="updateItem" style="display:none;">UPDATE</button></center> -->
+                            <center><div id="response"></div></center>
                         </div>
-                    </div></br>
-                </div></br>
+                    </div>
+                </div>
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-12">
@@ -110,14 +112,14 @@
                                 <table id="dataTable"  class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>SL.NO</th>
+                                            <th>Sl.No</th>
                                             <th>Category</th>
                                             <th>Brand</th>
                                             <th>Product</th>
-                                            <th>Flavor</th>
-                                            <th>Unit</th>
+                                            <!-- <th>Flavor</th>
+                                            <th>Unit</th> -->
                                             <th>Code</th>
-                                            <th>EDIT/DELETE</th>
+                                            <th>Edit</th>
                                         </tr>
                                     </thead>
                                     <tbody id="itemTableBoady">

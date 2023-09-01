@@ -19,6 +19,7 @@ class CategoryAction
             echo json_encode(['message' => 'Data already exists']);
         }else 
         {
+
             $insertStmt = $this->conn->prepare("INSERT INTO category (cateName) VALUES (?)");
             $insertStmt->bind_param("s", $name);
             if ($insertStmt->execute()) 
@@ -41,7 +42,13 @@ class CategoryAction
             echo json_encode(['message' => 'Data already exists']);
         }else
         {
+
             $updateStmt = $this->conn->prepare("UPDATE category SET cateName = ? WHERE cat_id=?");
+
+            // $updatePurchaseStmt = $conn->prepare("UPDATE purchase SET cateName = ? WHERE cat_id = ?");
+            // $updateStockStmt = $conn->prepare("UPDATE stock SET cateName = ? WHERE cat_id = ?");
+            // $updateItemStmt = $conn->prepare("UPDATE item SET cateName = ? WHERE cat_id = ?");
+            
             $updateStmt->bind_param("si", $name, $slno);
             $updateStmt->execute();
             if ($updateStmt->execute()) 
@@ -342,8 +349,8 @@ class Item {
     public function insertData($category, $brand, $flavor, $product, $unit, $item_code) 
     {
         $product = ucfirst($product);
-        $checkStmt = $this->conn->prepare("SELECT COUNT(*) FROM item WHERE category = ? AND brand = ? AND product = ? AND flavor = ? AND unit = ? AND item_code = ?");
-        $checkStmt->bind_param("ssssss", $category, $brand, $product, $flavor, $unit, $item_code);
+        $checkStmt = $this->conn->prepare("SELECT COUNT(*) FROM item WHERE category = ? AND brand = ? AND product = ? AND item_code = ?");
+        $checkStmt->bind_param("ssss", $category, $brand, $product,$item_code);
         $checkStmt->execute();
         $checkResult = $checkStmt->get_result();
         $rowCount = $checkResult->fetch_row()[0];
@@ -355,8 +362,8 @@ class Item {
         else 
         {
             try {
-                $insertStmt = $this->conn->prepare("INSERT INTO item (category, brand, flavor, product, unit, item_code) VALUES (?, ?, ?, ?, ?, ?)");
-                $insertStmt->bind_param("ssssss", $category, $brand, $flavor, $product, $unit, $item_code);
+                $insertStmt = $this->conn->prepare("INSERT INTO item (category, brand,product, item_code) VALUES (?, ?, ?, ?)");
+                $insertStmt->bind_param("ssss", $category, $brand,$product, $item_code);
 
                 if ($insertStmt->execute())
                 {
@@ -379,8 +386,8 @@ class Item {
     public function updateData($category, $brand, $flavor, $product, $unit, $item_code, $slno)
     {
         $product = ucfirst($product);
-        $checkStmt = $this->conn->prepare("SELECT COUNT(*) FROM item WHERE category = ? AND brand = ? AND product = ? AND flavor = ? AND unit = ? AND item_code = ? AND id != ?");
-        $checkStmt->bind_param("ssssssi", $category, $brand, $product, $flavor, $unit, $item_code,$slno);
+        $checkStmt = $this->conn->prepare("SELECT COUNT(*) FROM item WHERE category = ? AND brand = ? AND product = ? AND item_code = ? AND id != ?");
+        $checkStmt->bind_param("ssssi", $category, $brand, $product,$item_code,$slno);
         $checkStmt->execute();
         $checkResult = $checkStmt->get_result();
         $rowCount = $checkResult->fetch_row()[0];
@@ -390,8 +397,8 @@ class Item {
         }else
         {
             try{
-                    $updateStmt=$this->conn->prepare("UPDATE item SET category = ? , brand = ?, flavor = ?, product = ?, unit = ?, item_code = ? WHERE id= ?");
-                    $updateStmt->bind_param("ssssssi", $category, $brand, $flavor, $product, $unit, $item_code,$slno);
+                    $updateStmt=$this->conn->prepare("UPDATE item SET category = ? , brand = ?, product = ?, item_code = ? WHERE id= ?");
+                    $updateStmt->bind_param("ssssi", $category, $brand, $product,$item_code,$slno);
                     $updateStmt->execute();
                     if ($updateStmt->execute()) 
                     {
@@ -549,12 +556,13 @@ class Purchase
                         $mrpPrice=$item['mrpPrice'];
                         $salePrice=$item['salePrice'];
                         $item_code=$item['item_code'];
-                        $purchase_dataStmt=$this->conn->prepare("INSERT INTO `purchase_data`(`category`, `brand`, `product`, `flavor`, `unit`, `location`, `exp`, `gst`, `qty`, `totalprice`, `gstprice`, `baseprice`, `mrpprice`, `saleprice`, `item_code`, `pur_id`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-                        $purchase_dataStmt->bind_param("sssssssdddddddsi",$category,$brand,$product,$flavor,$unit,$location,$expDate,$gst,$qty,$price,$gstPer,$basePer,$mrpPrice,$salePrice,$item_code,$purchaseId);
+                        $unitQty=$item['unitQty'];
+                        $purchase_dataStmt=$this->conn->prepare("INSERT INTO `purchase_data`(`category`, `brand`, `product`, `flavor`, `unit`, `location`, `exp`, `gst`, `qty`, `totalprice`, `gstprice`, `baseprice`, `mrpprice`, `saleprice`, `item_code`, `pur_id`,`unitQty`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                        $purchase_dataStmt->bind_param("sssssssdddddddsis",$category,$brand,$product,$flavor,$unit,$location,$expDate,$gst,$qty,$price,$gstPer,$basePer,$mrpPrice,$salePrice,$item_code,$purchaseId,$unitQty);
                         if($purchase_dataStmt->execute())
                         {
-                            $stock_dataStmt=$this->conn->prepare("INSERT INTO `stock`(`category`, `brand`, `product`, `flavor`, `unit`, `location`, `exp`, `gst`, `qty`, `totalprice`, `gstprice`, `baseprice`, `mrpprice`, `saleprice`, `item_code`, `pur_id`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-                            $stock_dataStmt->bind_param("sssssssdddddddsi",$category,$brand,$product,$flavor,$unit,$location,$expDate,$gst,$qty,$price,$gstPer,$basePer,$mrpPrice,$salePrice,$item_code,$purchaseId);
+                            $stock_dataStmt=$this->conn->prepare("INSERT INTO `stock`(`category`, `brand`, `product`, `flavor`, `unit`, `location`, `exp`, `gst`, `qty`, `totalprice`, `gstprice`, `baseprice`, `mrpprice`, `saleprice`, `item_code`, `pur_id`,`unitQty`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                            $stock_dataStmt->bind_param("sssssssdddddddsis",$category,$brand,$product,$flavor,$unit,$location,$expDate,$gst,$qty,$price,$gstPer,$basePer,$mrpPrice,$salePrice,$item_code,$purchaseId,$unitQty);
                             if($stock_dataStmt->execute())
                             {
                                 $allQueriesSuccessful = "true";  
@@ -591,10 +599,12 @@ class Invoice
     public function __construct($conn) {
         $this->conn = $conn;
     }
-    public function invoiceData($custName, $saleDate, $totalAmt,$gstsel,$pay,$saleitemList)
+    public function invoiceData($custName, $saleDate, $totalAmt,$gstsel,$pay,$saleitemList,$custgst,$custmobile,$custadds)
     {
-        $invoiceStmt=$this->conn->prepare("INSERT INTO `invoice`(`custName`,`date`, `totalAmt`, `gstType`, `payMode`) VALUES (?,?,?,?,?)");
-        $invoiceStmt->bind_param("ssdss",$custName,$saleDate,$totalAmt,$gstsel,$pay);
+        // $invoiceStmt=$this->conn->prepare("INSERT INTO `invoice`(`custName`,`date`, `totalAmt`, `gstType`,`payMode`) VALUES (?,?,?,?,?)");
+        $invoiceStmt=$this->conn->prepare("INSERT INTO `invoice`(`custName`,`date`, `totalAmt`, `gstType`, `payMode`,`custGst`, `custMobile`, `custAdds`)
+        VALUES (?,?,?,?,?,?,?,?)");
+        $invoiceStmt->bind_param("ssdsssss",$custName,$saleDate,$totalAmt,$gstsel,$pay,$custgst,$custmobile,$custadds);
         if($invoiceStmt->execute())
         {
             $allQueriesSuccessful = "false";
@@ -615,6 +625,8 @@ class Invoice
                 $amount=$item['BAseAmount'];
                 $gstAmount=$item['gstAmount'];
                 $totalAmount=$item['total'];
+
+                $unitQty=$item['unitQty'];
 
                 $stockid=$item['stockid'];
 
@@ -638,8 +650,8 @@ class Invoice
                 $totalProfit=$perPfofit*$saleQty;
 
                     // ADDING INVOICE DATA
-                $invoiceDataStmt=$this->conn->prepare("INSERT INTO `invoice_data`(`category`, `brand`, `product`, `flavor`, `unit`, `gst`, `qty`, `rate`, `amount`, `sgst`, `cgst`, `igst`, `totalGst`, `totalAmount`, `inv_no`, `item_code`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-                $invoiceDataStmt->bind_param("sssssdddddddddis",$category,$brand,$product,$flavor,$unit,$gst,$saleQty,$rate,$amount,$sgst,$cgst,$igst,$gstAmount,$totalAmount,$invoiceId,$item_code);
+                $invoiceDataStmt=$this->conn->prepare("INSERT INTO `invoice_data`(`category`, `brand`, `product`, `flavor`, `unit`, `gst`, `qty`, `rate`, `amount`, `sgst`, `cgst`, `igst`, `totalGst`, `totalAmount`, `inv_no`, `item_code`,`unitQty`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                $invoiceDataStmt->bind_param("sssssdddddddddiss",$category,$brand,$product,$flavor,$unit,$gst,$saleQty,$rate,$amount,$sgst,$cgst,$igst,$gstAmount,$totalAmount,$invoiceId,$item_code,$unitQty);
                 if($invoiceDataStmt->execute())
                 {
                     $invoiceDataId = $invoiceDataStmt->insert_id;

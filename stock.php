@@ -20,8 +20,8 @@
                 </div>
             </div>
             <div class="box-header">
-                <div class="getSpace">
-                </div>
+                <!-- <div class="getSpace">
+                </div> -->
                 <div class="cat active" id="stockbox">
                     <h6 class="box-header-names">view stock</h6>
                 </div>
@@ -32,8 +32,15 @@
                 </div>
                 <div class="getSpace">
                 </div>
-                <div class="cat" id="stockbyPrice">
-                    <h6 class="box-header-names">view stock By Price</h6>
+                <div class="cat" id="stockbyCode">
+                    <h6 class="box-header-names">Stock By Item Code</h6>
+                </div>
+                <div class="getSpace">
+                </div>
+                <div class="cat" id="allStock">
+                    <h6 class="box-header-names">All Stock</h6>
+                </div>
+                <div class="getSpace">
                 </div>
             </div>
             <div class="box-content" id="stockQty">
@@ -52,7 +59,8 @@
                                 <thead>
                                     <tr>
                                         <th>SL.NO</th>
-                                        <th>Category-Brand-Product-Flavor</th>
+                                        <th>Category</th>
+                                        <th>Brand-Product-Flavor</th>
                                         <th>Unit</th>
                                         <th>Qty</th>
                                         <th>Item Code</th>
@@ -67,14 +75,14 @@
                 </div>
             </div> 
             <div class="box-content" id="stockExpiry" style="display:none">
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-md-4" style="margin-left:40px;">
                         <label for="cate">Filter Category</label>
                         <select class="form-control" id="categoryFilter">
                             <option value="">Select Category</option>
                         </select>
                     </div>
-                </div>
+                </div> -->
                 <div class="row">
                     <div class="col-md-12">
                         <div class="table-container">
@@ -97,8 +105,54 @@
                     </div>
                 </div>
             </div> 
-            <div class="box-content" id="stockbypricedata" style="display:none">
-                
+            <div class="box-content" id="stockByCodeData" style="display:none">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-container">
+                            <table id="dataTable"  class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>SL.NO</th>
+                                        <th>Category</th>
+                                        <th>Brand-Product</th>
+                                        <th>Qty</th>
+                                        <th>Item Code</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemCodeBoady">
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-content" id="allStockData" style="display:none">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-container">
+                            <table id="dataTable"  class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>SL.NO</th>
+                                        <th>Category</th>
+                                        <th>Brand-Product</th>
+                                        <th>Unit</th>
+                                        <th>Location</th>
+                                        <th>Base Price</th>
+                                        <th>Gst Price</th>
+                                        <th>Sale Price</th>
+                                        <th>Qty</th>
+                                        <th>Item Code</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allStockDataItems">
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
