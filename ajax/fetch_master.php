@@ -280,7 +280,10 @@ if(isset($_GET['stock']))
 
 if(isset($_GET['codeData']))
 {
-    $fetchStmt = $conn->prepare("SELECT *, SUM(qty) AS total_qty FROM `stock` WHERE qty != 0  GROUP BY item_code");
+    $codeData=$_GET['codeData'];
+    // $fetchStmt = $conn->prepare("SELECT *, SUM(qty) AS total_qty FROM `stock` WHERE qty != 0  GROUP BY item_code");
+    $fetchStmt = $conn->prepare("SELECT * FROM `stock` WHERE `qty` != 0 AND `item_code`= ?");
+    $fetchStmt->bind_param("s",$codeData);
     $fetchStmt->execute();
 
     $result = $fetchStmt->get_result();

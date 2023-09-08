@@ -107,6 +107,15 @@
             </div> 
             <div class="box-content" id="stockByCodeData" style="display:none">
                 <div class="row">
+                    <div class="col-md-4" style="margin-left:40px;">
+                        <label for="cate">Item Code</label>
+                        <input type="text" class="form-control" id="itemcode"/>
+                    </div>
+                    <div class="col-md-4" style="margin-left:40px; margin-top:30px;">
+                        <button id="search_byCode" class="btn btn-warning">Search</button>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-12">
                         <div class="table-container">
                             <table id="dataTable"  class="table table-bordered">
@@ -115,6 +124,8 @@
                                         <th>SL.NO</th>
                                         <th>Category</th>
                                         <th>Brand-Product</th>
+                                        <th>Flavor</th>
+                                        <th>Unit</th>
                                         <th>Qty</th>
                                         <th>Item Code</th>
                                     </tr>

@@ -17,111 +17,126 @@
         <script src="js/main.js"></script>
 
         <style>
-            .box{
-                padding-top:10px;
+            .main
+             {
+                margin-top:15px;
+                margin-right:15px;
+                margin-left:15px;
             }
-            .box1
+            h2{
+                font-weight: bold;
+            }
+
+            strong
             {
+                font-size:12px;
+            }
+            h6
+            {
+                font-size:14px;
+            }
+            p{
+                font-size:10px;
+            }
+            .table > thead,tfoot > tr >th,td
+            {
+                font-size:12px;
+            }
+            .custDetails , .details{
+                border: 1px solid #dee2e6;
                 padding:10px;
             }
-            .box h5
-            {
-                font-size:16px;
-            }
-            .box span
-            {
-                margin-left:10px;
-                font-size:14px;
+            @page{
+                margin:0;
+                padding:0;
             }
         </style>
     </head>
 <body>
     <div class="container-fluid">
-        </br>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="box1">
-                    <h2>FLEX NUTRISHOP</h2>
-                    <h6>SHOP NO 02, SHIVARSHNI APTS, OLD INCOME TAX ROAD,</h6>
-                    <h6>NEAR NOOLVI BUILDING, VIDHYANAGAR, HUBLI - 580021</h6>
-                    <h4>PH NO   : 7021659424</h4>
-                    <h4>GSTIN: 29ASFPK4675E1ZI</h4>
-                    <h4>STATE CODE: 29 KARNATAKA</h4>
+        <div class="main">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="box1">
+                        <h2>FLEX NUTRISHOP</h2>
+                        <strong>SHOP NO 02, SHIVARSHNI APTS, OLD INCOME TAX ROAD,</strong>
+                        <strong>NEAR NOOLVI BUILDING, VIDHYANAGAR, HUBLI - 580021</strong></br>
+                        <strong>PH NO : 7021659424 | GSTIN: 29ASFPK4675E1ZI | STATE CODE: 29 KARNATAKA</strong>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="custDetails">
+                        <h6><b>NAME : M/S. </b><span id="name"> </span></h6>
+                        <h6><b>ADDRESS : </b><span id="adds"></span></h6>
+                        <h6><b>MOBILE NO : </b><span id="mobile"></span></h6>
+                        <h6><b>MODE OF PAYMENT : </b><span id="pay"></span></h6>
+                        <h6><b>PARTY GST :</b><span id="gst"></span></h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="details" style="margin-bottom:4px;">
+                        <h6><b>INVOICE NO : </b><span id="inv"> </span></h6>
+                        <h6><b>Date : </b><span id="date"> </span></h6>
+                    </div>
+                    <div class="details">
+                        <p>GOODS DESPATCHED THROUGH : </p>
+                    </div>
+                    <div class="details" style="border-top:0">
+                        <p>E WAY. BILL NO : </p>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="box">
-                    <h5>GST INVOICE</h5>
-                    <P>CASH / CREDIT / MEMO</P>
+            </br>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>SL.NO</th>
+                                <th>PARTICULAR</th>
+                                <th>TAX%</th>
+                                <th>QTY</th>
+                                <th>RATE</th>
+                                <th>AMOUNT</th>
+                                <th>SGST</th>
+                                <th>CGST</th>
+                                <th>IGST</th>
+                                <th>AMOUNT</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableDataInvoice">
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="7" id="inwords"></th>
+                                <th colspan="2" class="text-right">Total Amount</th>
+                                <th id="totalAmt"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
-                <div class="box">
-                    <h5><b>NAME: M/S.</b><span id="name"></span></h5>
-                    <h5><b>ADDRESS:</b><span id="adds"></span></h5>
-                    <h5><b>MOBILE NO:</b><span id="mobile"></span></h5>
-                    <h5><b>MODE OF PAYMENT:</b><span id="pay"></span></h5>
-                    <h5><b>PARTY GST:</b><span id="gst"></span></h5>
+            </div>
+            <div class="row">
+                <div class="col-md-7 text-right">
+                    <p>Subject to Hubali Jurisdiction<p>
+                </div>
+                <div class="col-md-5 text-right">
+                    <p><b>FOR. </b>Flex Nutrishop</p>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="box">
-                    <h5><b>INVOICE NO :</b><span id="inv"></span></h5>
-                    <h5><b>Date :</b><span id="date"></span></h5>
-                    <p>GOODS DESPATCHED THROUGH</p>
-                    </br>
-                    <p>E WAY. BILL NO:</p>
-                    </br>
+            </br>
+            <div class="row">
+                <div class="col-md-5">
+                    <p><b>NOTE :</b><span> GOODS ONCE SOLD CANNOT TAKEN BACK.</span></p>
                 </div>
-            </div>
-        </div>
-        </br>
-        <div class="row">
-            <div class="col-md-12">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>SL.NO</th>
-                            <th>PARTICULAR</th>
-                            <th>TAX%</th>
-                            <th>QTY</th>
-                            <th>RATE</th>
-                            <th>AMOUNT</th>
-                            <th>SGST</th>
-                            <th>CGST</th>
-                            <th>IGST</th>
-                            <th>AMOUNT</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableDataInvoice">
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th colspan="9" class="text-right">Total Amount</th>
-                            <th id="totalAmt"></th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-7 text-right">
-                <p>Subject to Hubali Jurisdiction<p>
-            </div>
-            <div class="col-md-5 text-right">
-                <p><b>For.</b>Flex Nutrishop</p>
-            </div>
-        </div>
-        </br>
-        <div class="row">
-            <div class="col-md-5">
-                <p><b>Note:</b><span>GOODS ONCE SOLD CANNOT TAKEN BACK.</span></p>
-            </div>
-            <div class="col-md-2">
-            </div>
-            <div class="col-md-3">
-                <p><span>Customer's Signature</span></p>
-            </div>
-            <div class="col-md-2">
-                <p><span>Proprietor</span></p>
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-3">
+                    <p><span>Customer's Signature</span></p>
+                </div>
+                <div class="col-md-2">
+                    <p><span>Proprietor</span></p>
+                </div>
             </div>
         </div>
     </div>

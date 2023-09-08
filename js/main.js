@@ -110,7 +110,7 @@ class TabManager
                     return true;
                 }else
                 {
-                    return false;   
+                    return false;
                 }
             });
         }
@@ -1578,30 +1578,63 @@ class Stock{
     }
     ItemCodeRecord()
     {
-        let log= $.ajax({
-            url: 'ajax/fetch_master.php',
-            type: 'GET',
-            data: {
-                codeData:'codeData',
-            },
-            dataType:'json',
-            success: function (response) 
-            {
-                const tbodyElement = document.getElementById('itemCodeBoady');
-                tbodyElement.innerHTML = '';
-                response.forEach((item,index)=> 
+        // let log= $.ajax({
+        //     url: 'ajax/fetch_master.php',
+        //     type: 'GET',
+        //     data: {
+        //         codeData:'codeData',
+        //     },
+        //     dataType:'json',
+        //     success: function (response) 
+        //     {
+        //         const tbodyElement = document.getElementById('itemCodeBoady');
+        //         tbodyElement.innerHTML = '';
+        //         response.forEach((item,index)=> 
+        //         {
+        //             const rowHTML = `<tr>
+        //                                 <td>${index + 1}</td>
+        //                                 <td>${item.category}</td>
+        //                                 <td>${item.brand} - ${item.product}</td>
+        //                                 <td>${item.total_qty}</td>
+        //                                 <td>${item.item_code}</td>
+        //                             </tr>`;
+        //                 tbodyElement.innerHTML += rowHTML;
+        //         });
+        //     }
+        // });
+        const search_byCode = document.getElementById('search_byCode');
+        search_byCode.addEventListener('click',function(e)
+        {
+            var itemcode=$('#itemcode').val();
+            let log= $.ajax({
+                url: 'ajax/fetch_master.php',
+                type: 'GET',
+                data: {
+                    codeData:itemcode,
+                },
+                dataType:'json',
+                success: function (response) 
                 {
-                    const rowHTML = `<tr>
-                                        <td>${index + 1}</td>
-                                        <td>${item.category}</td>
-                                        <td>${item.brand} - ${item.product}</td>
-                                        <td>${item.total_qty}</td>
-                                        <td>${item.item_code}</td>
-                                    </tr>`;
-                        tbodyElement.innerHTML += rowHTML;
-                });
-            }
+                    const tbodyElement = document.getElementById('itemCodeBoady');
+                    tbodyElement.innerHTML = '';
+                    response.forEach((item,index)=> 
+                    {
+                        const rowHTML = `<tr>
+                                            <td>${index + 1}</td>
+                                            <td>${item.category}</td>
+                                            <td>${item.brand} - ${item.product}</td>
+                                            <td>${item.flavor}</td>
+                                            <td>${item.unitQty}-${item.unit}</td>
+                                            <td>${item.qty}</td>
+                                            <td>${item.item_code}</td>
+                                        </tr>`;
+                            tbodyElement.innerHTML += rowHTML;
+                    });
+                }
+            });
+            console.log(log);
         });
+        
     }
     allStock()
     {
@@ -1622,7 +1655,7 @@ class Stock{
                                         <td>${index + 1}</td>
                                         <td>${item.category}</td>
                                         <td>${item.brand} - ${item.product} - ${item.flavor}</td>
-                                        <td>${item.unit} - ${item.unitQty}</td>
+                                        <td>${item.unitQty}-${item.unit}</td>
                                         <td>${item.location}</td>
                                         <td>${item.baseprice}</td>
                                         <td>${item.gstprice}</td>
@@ -2532,6 +2565,7 @@ class FinalInvoice
 {
     loadTableData() 
     {
+        const vm=this;
         var currentUrl = new URL(window.location);
         var invoiceNo = currentUrl.searchParams.get("invoice_no");
         if (invoiceNo) 
@@ -2603,8 +2637,13 @@ class FinalInvoice
                                 totalAmount += parseFloat(item.totalAmount);
                             });
                             // console.log(totalAmount);
+                            var words=vm.convertNumberToWords(totalAmount);
+                            console.log(words)
+
                             const totalAmtElement = document.getElementById('totalAmt');
+                            const inwords = document.getElementById('inwords');
                             totalAmtElement.textContent = `${totalAmount}`;
+                            inwords.textContent = `IN WORDS:${words}`;
                             window.print();
                         }
                     });
@@ -2614,11 +2653,57 @@ class FinalInvoice
             });
             window.onafterprint = function(event)
             {
-                window.location.href ="sell.php";
+                // window.location.href ="sell.php";
             };
         }else
         {
             console.log("Invoice number not found in the URL.");
         }
+    }
+    convertNumberToWords(number) 
+    {
+        const vm=this;
+            var words = ["ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN",
+                "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"
+            ];
+
+            var tensWords = ["", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"];
+
+            var wordsToReturn = "";
+            var crore = Math.floor(number / 10000000);
+            var lakh = Math.floor((number % 10000000) / 100000);
+            var thousand = Math.floor((number % 100000) / 1000);
+            var hundreds = Math.floor((number % 1000) / 100);
+            var tens = Math.floor((number % 100) / 10);
+            var ones = Math.floor(number % 10);
+
+            if (crore > 0) {
+                wordsToReturn += vm.convertNumberToWords(crore) + " CRORE ";
+            }
+
+            if (lakh > 0) {
+                wordsToReturn += vm.convertNumberToWords(lakh) + " LAKH ";
+            }
+
+            if (thousand > 0) {
+                wordsToReturn += vm.convertNumberToWords(thousand) + " THOUSAND ";
+            }
+
+            if (hundreds > 0) {
+                wordsToReturn += words[hundreds] + " HUNDRED ";
+            }
+
+            if (tens > 0 || ones > 0) {
+                if (tens < 2) {
+                wordsToReturn += words[tens * 10 + ones] + " ";
+                } else {
+                wordsToReturn += tensWords[tens] + " ";
+                if (ones > 0) {
+                    wordsToReturn += words[ones] + " ";
+                }
+                }
+            }
+
+            return wordsToReturn.trim();
     }
 }
