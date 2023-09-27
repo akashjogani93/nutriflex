@@ -251,8 +251,7 @@
                                             <th>Invoice Date</th>
                                             <th>Payment Mode</th>
                                             <th>Total Amount</th>
-                                            <th>View</th>
-                                            <th>Print</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="viewSaleDataTable">
@@ -297,3 +296,4 @@
             const invoiceManager= new Invoice();
         });
     </script>
+<?php include('footer.php'); ?>

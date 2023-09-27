@@ -528,12 +528,11 @@ class Purchase
     public function __construct($conn) {
         $this->conn = $conn;
     }
-    public function purchaseData($venName, $purDate, $totalAmt, $itemList) 
+    public function purchaseData($venName, $purDate, $totalAmt, $itemList,$remark) 
     {
-
         try{
-            $purchaseStmt=$this->conn->prepare("INSERT INTO `purchase`(`venName`, `purchase_date`, `totalamount`) VALUES (?,?,?)");
-            $purchaseStmt->bind_param("ssd",$venName,$purDate,$totalAmt);
+            $purchaseStmt=$this->conn->prepare("INSERT INTO `purchase`(`venName`, `purchase_date`, `totalamount`,`remark`) VALUES (?,?,?,?)");
+            $purchaseStmt->bind_param("ssds",$venName,$purDate,$totalAmt,$remark);
             if($purchaseStmt->execute())
             {
                 try{
@@ -566,11 +565,9 @@ class Purchase
                             if($stock_dataStmt->execute())
                             {
                                 $allQueriesSuccessful = "true";  
-                                
                             }
                         }
                     }
-
                     if($allQueriesSuccessful=='true') 
                     {
                         echo json_encode(['message' => 'Purchased successfully..']);

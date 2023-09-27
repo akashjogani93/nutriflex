@@ -212,6 +212,12 @@
                                 <input type="text" name="totalAmt" id="totalAmt" class="form-control" readonly>
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                            <label for="cate">Remark</label>
+                                <input type="text" name="remark" id="remark" class="form-control">
+                            </div>
+                        </div>
                         <div class="col-md-2">
                             <div class="form-group" style="display:flex;">
                                 <button class="btn btn-info" id="submitPurchase" style="margin-top:30px; margin-right:5px;">PURCHASE</button>
@@ -254,6 +260,7 @@
                                             <th>Vendor Name</th>
                                             <th>Purchase Date</th>
                                             <th>Total Amount</th>
+                                            <th>Remark</th>
                                             <th>View</th>
                                         </tr>
                                     </thead>

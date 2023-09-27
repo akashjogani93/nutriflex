@@ -100,20 +100,20 @@ class TabManager
                     const rowData = getDataFromTableRow(row);
                 }
             });
-        if(tabId != 'gst')
-        {
-            $('.nameFeild').keypress(function(event)
-            {
-                var keycode = (event.keyCode ? event.keyCode : event.which);
-                if ((keycode < 47 || keycode > 57))
-                {
-                    return true;
-                }else
-                {
-                    return false;
-                }
-            });
-        }
+        // if(tabId != 'gst')
+        // {
+        //     $('.nameFeild').keypress(function(event)
+        //     {
+        //         var keycode = (event.keyCode ? event.keyCode : event.which);
+        //         if ((keycode < 47 || keycode > 57))
+        //         {
+        //             return true;
+        //         }else
+        //         {
+        //             return false;
+        //         }
+        //     });
+        // }
     }
 
     async fetchAndPopulateData(tabId) 
@@ -252,7 +252,6 @@ class TabManager
         // const submitButton = document.querySelector('.btn-info');
         if(nameInput.value=='')
         {
-            // console.log('Please Fill Feilds');
             nameInput.style.border = '1px solid red';
             setTimeout(function() {
                 nameInput.style.border = '';
@@ -935,7 +934,7 @@ class Purchase {
             vm.priceCalculation(totalPriceValue,gst,qty)
         });
 
-        $('#qty, #price, #mrpPrice, #salePrice').keypress(function(event)
+        $('#qty').keypress(function(event)
         {
             var keycode = (event.keyCode ? event.keyCode : event.which);
             if ((keycode < 47 || keycode > 57))
@@ -944,6 +943,35 @@ class Purchase {
             }else
             {
                 return true;   
+            }
+        });
+
+        $('#price, #mrpPrice, #salePrice').keypress(function(event)
+        {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            var currentValue = $(this).val();
+            if (keycode === 46) 
+            {
+                if (currentValue.indexOf('.') !== -1) 
+                {
+                    return false; 
+                }
+            } else if ((keycode < 48 || keycode > 57)) 
+            {
+                return false;
+            }
+        
+            return true;
+        });
+        $('#price, #mrpPrice, #salePrice').on('input', function() {
+            var value = $(this).val();
+            
+            value = value.replace(/^0+/, '');
+        
+            if (/^\d+(\.\d{0,2})?$/.test(value)) {
+                $(this).val(value);
+            } else {
+                $(this).val(value.slice(0, -1));
             }
         });
 
@@ -1085,7 +1113,6 @@ class Purchase {
                 }
                 else if(status==1)
                 {
-                    // console.log(status);
                     var dropdownElements = [
                         $('#brand'),$('#product'),$('#category')
                     ];
@@ -1123,7 +1150,6 @@ class Purchase {
                 }
             }
         });
-        // console.log(log);
     }
     priceCalculation(totalPriceValue,gst,qty)
     {
@@ -1187,7 +1213,13 @@ class Purchase {
 
         let existingItems = localStorage.getItem('items');
         let itemsArray = existingItems ? JSON.parse(existingItems) : [];
-        let itemExists = itemsArray.some(item => item.item_code === item_code);
+        // let itemExists = itemsArray.some(item => item.item_code === item_code);
+        let itemExists = itemsArray.some(
+            (item) =>
+                item.item_code === newItem.item_code &&
+                item.flavor === newItem.flavor &&
+                item.basePer === newItem.basePer
+        );
 
         if (!itemExists) 
         {
@@ -1203,11 +1235,10 @@ class Purchase {
         else
         {
             // Handle case when item_code already exists
-            console.log('Item with the same item_code already exists.');
             Swal.fire({
                 icon: 'error',
                 title: 'Item Code Exists',
-                text: 'An item with the same item code already exists.',
+                text: 'You Have Added Same Price Same Product.',
             });
     
         }
@@ -1271,13 +1302,17 @@ class Purchase {
         let venName=$('#venName').val();
         let purDate=$('#purDate').val();
         let totalAmt=$('#totalAmt').val();
-        var input=['#venName','#purDate','#totalAmt'];
+        let remark=$('#remark').val();
+        var input=['#venName','#purDate','#totalAmt','#remark'];
         for(let i=0; i<input.length; i++)
         {
             if($(input[i]).val() == '')
             {
                 $(input[i]).css("border", "1px solid red");
-                return;
+                if(i !=3)
+                {
+                    return;
+                }
             }else
             {
                 $(input[i]).css("border","");
@@ -1293,6 +1328,7 @@ class Purchase {
                 purDate:purDate,
                 totalAmt:totalAmt,
                 itemList :items,
+                remark:remark
             },
             success: function(response)
             {
@@ -1372,6 +1408,7 @@ class Purchase {
                                         <td>${rowData.venName}</td>
                                         <td>${rowData.purchase_date}</td>
                                         <td>${rowData.totalamount}</td>
+                                        <td>${rowData.remark}</td>
                                         <td>
                                             <button class="btn btn-sm btn-primary view-button" data-id="${rowData.id}">View</button>
                                         </td>
@@ -1632,7 +1669,6 @@ class Stock{
                     });
                 }
             });
-            console.log(log);
         });
         
     }
@@ -1917,7 +1953,6 @@ class Invoice
                     const saleQty = $(row).find('#saleqty').val();
                     let total = $(row).find('#total').val();
                     let basepur = $(row).find('#basepur').val();
-                    // console.log(location, expDate, gst, qty, salePrice, mrpPrice, saleQty);
                     let Qtyto = $(row).find('#saleqty').val();
                     
                     if (Qtyto !== "" && parseFloat(Qtyto) !== 0)
@@ -1955,7 +1990,6 @@ class Invoice
                         };
 
                         const existingSaleItems = JSON.parse(localStorage.getItem('saleItems')) || [];
-                        console.log('Existing Sale Items:', existingSaleItems);
                     
                         const itemAlreadyExists = existingSaleItems.some(item => item.stockid === stockid);
                         if (itemAlreadyExists) 
@@ -1980,7 +2014,6 @@ class Invoice
                 {
 
                     localStorage.setItem('saleItems', JSON.stringify(existingSaleItems));
-                    console.log(saleItems);
                     vm.fetchItems();
                 }
 
@@ -2197,7 +2230,6 @@ class Invoice
                 }
                 else if(select_Id=='unitQty')
                 {
-                    // console.log(response);
                     // var item_code=response[0].name;
                     // $('#item_code').val(item_code);
                     vm.loadAdjuctData(response);
@@ -2211,11 +2243,9 @@ class Invoice
                 });
             }
         });
-        // console.log(log);
     }
     loadAdjuctData(response)
     {
-        console.log(response);
         // let log=$.ajax({
         //     url:'ajax/fetch_master.php',
         //     type :'POST',
@@ -2271,7 +2301,6 @@ class Invoice
     {
         const vm=this;
         const items = JSON.parse(localStorage.getItem('saleItems'));
-        console.log(items);
         if (items !== null && Array.isArray(items))
         {
             const tableBody = document.getElementById('saleTableBoady');
@@ -2319,13 +2348,16 @@ class Invoice
     InvoiceData()
     {
         const vm=this;
-        var input=['#custName','#saleDate','#totalAmt','#gstsel','#pay'];
+        var input = ['#custName', '#saleDate', '#totalAmt', '#gstsel', '#custmobile','#custadds','#pay'];
         for(var i=0; i<input.length; i++)
         {
             if($(input[i]).val() == '')
             {
                 $(input[i]).css("border", "1px solid red");
-                return;
+                if (i != 3 && i == 2 && i != 4 && i != 5)
+                {
+                    return;
+                }
             }else
             {
                 $(input[i]).css("border","");
@@ -2361,8 +2393,6 @@ class Invoice
             },
             success: function(response)
             {
-                // console.log(response);
-                // console.log(response.message);
                 if(response.message=="Submited successfully..")
                 {
                     localStorage.removeItem('saleItems');
@@ -2397,7 +2427,6 @@ class Invoice
     }
     viewInvoiceRecord(sta)
     {
-        // console.log(sta);
         if(sta==1)
         {
             var fromDate=$('#datefrom').val();
@@ -2431,7 +2460,6 @@ class Invoice
             dataType:'json',
             success: function (response) 
             {
-                console.log(response);
                 const tbodyElement = document.getElementById('viewSaleDataTable');
                 tbodyElement.innerHTML = '';
                 response.forEach(rowData => 
@@ -2446,17 +2474,16 @@ class Invoice
                                         <td>${rowData.payMode}</td>
                                         <td>${rowData.totalAmt}</td>
                                         <td>
-                                            <button class="btn btn-sm btn-primary view-button" data-id="${rowData.id}">VIEW</button>
+                                            <button class="btn btn-sm btn-primary view-button" data-id="${rowData.id}"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                                            <button class="btn btn-sm btn-danger print-button" data-id="${rowData.id}"><i class="fa fa-print" aria-hidden="true"></i></button>
+                                            <button class="btn btn-sm btn-warning pdf-button" data-id="${rowData.id}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></button>
+                                            <button class="btn btn-sm btn-info edit-button" data-id="${rowData.id}"><i class="fa fa-pencil-square" aria-hidden="true"></i></button>
                                         </td>
-                                        <td>
-                                        <button class="btn btn-sm btn-danger print-button" data-id="${rowData.id}">PRINT</button>
-                                    </td>
                                     </tr>`;
-                        tbodyElement.innerHTML += rowHTML;
+                            tbodyElement.innerHTML += rowHTML;
                 });
             }
         });
-        // console.log(log)
 
         document.addEventListener('click', event => 
         {
@@ -2498,7 +2525,6 @@ class Invoice
                         response.forEach(item => {
                             totalAmount += parseFloat(item.totalAmount);
                         });
-                        console.log(totalAmount);
                         const totalAmtElement = document.getElementById('totalSaleAmount');
                         totalAmtElement.textContent = `TOTAL AMOUNT - ${totalAmount}`;
                     }
@@ -2508,7 +2534,17 @@ class Invoice
             {
                 const row = event.target.closest('tr');
                 let cat_id = row.querySelector('.print-button').getAttribute('data-id');
-                window.location="invoice.php?invoice_no="+cat_id;
+                window.location = "invoice.php?invoice_no=" + cat_id;
+            }else if(event.target.classList.contains('pdf-button'))
+            {
+                const row=event.target.closest('tr');
+                let cat_id = row.querySelector('.pdf-button').getAttribute('data-id');
+                window.location="pdf.php?invoice_no="+cat_id;
+            }else if(event.target.classList.contains('edit-button'))
+            {
+                const row=event.target.closest('tr');
+                let cat_id =row.querySelector('.edit-button').getAttribute('data-id');
+                window.location="chnageBil.php?invoice_no="+cat_id;
             }
         });
         document.addEventListener('click', event => 
@@ -2517,7 +2553,6 @@ class Invoice
             {
                 $('#dataTable2').hide();
                 $('#dataTable1').show();
-
             }
         });
     }
@@ -2536,7 +2571,6 @@ class Profit
             dataType:'json',
             success: function (response) 
             {
-                console.log(response);
                 const tbodyElement = document.getElementById('profitTable');
                 tbodyElement.innerHTML = '';
                 response.forEach((item,index)=> 
@@ -2557,7 +2591,6 @@ class Profit
                 });
             }
         });
-        console.log(log)
     }
 }
 
@@ -2568,7 +2601,9 @@ class FinalInvoice
         const vm=this;
         var currentUrl = new URL(window.location);
         var invoiceNo = currentUrl.searchParams.get("invoice_no");
-        if (invoiceNo) 
+        var pdf = currentUrl.searchParams.get("pdf");
+        // console.log(invoiceNo)
+        if(invoiceNo) 
         {
             let log= $.ajax({
                 url: 'ajax/fetch_master.php',
@@ -2613,7 +2648,6 @@ class FinalInvoice
                         dataType:'json',
                         success: function (response) 
                         {
-                            console.log(response);
                             const tbodyElement = document.getElementById('tableDataInvoice');
                             tbodyElement.innerHTML = '';
                             var totalAmount=0;
@@ -2636,9 +2670,7 @@ class FinalInvoice
                             response.forEach(item => {
                                 totalAmount += parseFloat(item.totalAmount);
                             });
-                            // console.log(totalAmount);
                             var words=vm.convertNumberToWords(totalAmount);
-                            console.log(words)
 
                             const totalAmtElement = document.getElementById('totalAmt');
                             const inwords = document.getElementById('inwords');
@@ -2653,7 +2685,7 @@ class FinalInvoice
             });
             window.onafterprint = function(event)
             {
-                // window.location.href ="sell.php";
+                window.location.href ="sell.php";
             };
         }else
         {
@@ -2705,5 +2737,74 @@ class FinalInvoice
             }
 
             return wordsToReturn.trim();
+    }
+}
+
+class BillEdit
+{
+    constructor()
+    {
+        this.ids = [
+            { id: 'category', purchase: 'category' },
+        ];
+        this.initializeTabs();
+    }
+    initializeTabs()
+    {
+        const urlParams = new URLSearchParams(window.location.search);
+        const invoiceNo = urlParams.get('invoice_no');
+        console.log(invoiceNo);
+        let log= $.ajax({
+            url: 'ajax/fetch_master.php',
+            type: 'GET',
+            data: {
+                invoiceRecordItem:'invoiceRecordItem',
+                inv_id:invoiceNo,
+            },
+            dataType:'json',
+            success: function (response) 
+            {
+                const tbodyElement = document.getElementById('saleTableBoady');
+                tbodyElement.innerHTML = '';
+                var totalAmount=0;
+                response.forEach((item,index)=> 
+                {
+                    const rowHTML = `<tr>
+                                        <td>${index + 1}</td>
+                                        <td>${item.category} - ${item.brand} - ${item.product} - ${item.flavor} - ${item.unit}</td>
+                                        <td>${item.gst}</td>
+                                        <td>${item.qty}</td>
+                                        <td>${item.rate}</td>
+                                        <td>${item.amount}</td>
+                                        <td>${item.sgst}</td>
+                                        <td>${item.cgst}</td>
+                                        <td>${item.igst}</td>
+                                        <td>${item.totalAmount}</td>
+                                        <td><button class="btn btn-sm btn-info edit-button" data-id="${item.id}"><i class="fa fa-pencil-square" aria-hidden="true"></i></button></td>
+                                    </tr>`;
+                        tbodyElement.innerHTML += rowHTML;
+                });
+                response.forEach(item => {
+                    totalAmount += parseFloat(item.totalAmount);
+                });
+                const totalAmtElement = document.getElementById('totalSaleAmount');
+                totalAmtElement.textContent = `TOTAL AMOUNT - ${totalAmount}`;
+            }
+        });
+
+        document.addEventListener('click', event => 
+        {
+            if(event.target.classList.contains('edit-button'))
+            {
+                const row=event.target.closest('tr');
+                let cat_id = row.querySelector('.edit-button').getAttribute('data-id');
+                alert(cat_id);
+                let log=$.ajax({
+                    url:'',
+                    type:'post'
+
+                })
+            }
+        });
     }
 }

@@ -79,15 +79,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         }
     }
 
-    if (isset($_POST['ven']) && isset($_POST['purDate']) && isset($_POST['totalAmt']) && isset($_POST['itemList']))
+    if (isset($_POST['ven']) && isset($_POST['purDate']) && isset($_POST['totalAmt']) && isset($_POST['itemList']) && isset($_POST['remark']))
     {
         $venName = $_POST['ven'];
         $purDate = $_POST['purDate'];
         $totalAmt = $_POST['totalAmt'];
         $itemList=$_POST['itemList'];
+        $remark=$_POST['remark'];
         
         $purchase= new Purchase($conn);
-        $purchase->purchaseData($venName, $purDate, $totalAmt, $itemList);
+        $purchase->purchaseData($venName, $purDate, $totalAmt, $itemList,$remark);
         
     }
 
