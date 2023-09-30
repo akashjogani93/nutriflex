@@ -485,7 +485,7 @@ if(isset($_GET['invoiceRecordItem']))
 
 if(isset($_GET['profit']))
 {
-    $fetchStmt=$conn->prepare("SELECT `profit`.*,`invoice_data`.`item_code`,`invoice_data`.`product`,`invoice`.`date` FROM `profit`,`invoice_data`,`invoice` WHERE `profit`.`ivoicedata_id`=`invoice_data`.`id` AND `profit`.`ivoicedata_id`=`invoice`.`id`");
+    $fetchStmt=$conn->prepare("SELECT `profit`.*,`invoice_data`.`item_code`,`invoice_data`.`product`,`invoice`.`date` FROM `profit`,`invoice_data`,`invoice` WHERE `profit`.`ivoicedata_id`=`invoice_data`.`id` AND `profit`.`ivoice_id`=`invoice`.`id`");
     $fetchStmt->execute();
     $result=$fetchStmt->get_result();
 

@@ -1272,7 +1272,7 @@ class Purchase {
                     tableBody.appendChild(row);
                 });
                 items.forEach(item => {
-                    totalAmount += parseFloat(item.price); // Assuming "mrp" is a numeric value
+                    totalAmount += parseFloat(item.price);
                 });
                 const totalAmt = document.getElementById('totalAmt').value=totalAmount;
             }
@@ -1293,7 +1293,7 @@ class Purchase {
         let items = JSON.parse(localStorage.getItem('items'));
         items.splice(index, 1);
         localStorage.setItem('items', JSON.stringify(items));
-        this.fetchItems(); // Refresh the table after deletion
+        this.fetchItems();
     }
 
     submitData()
@@ -1481,32 +1481,34 @@ class Stock{
     initializeTabs()
     {
         const vm=this;
-        let log= $.ajax({
-            url: 'ajax/fetch_master.php',
-            type: 'GET',
-            data: {
-                stock:'stock',
-            },
-            dataType:'json',
-            success: function (response) 
-            {
-                const tbodyElement = document.getElementById('itemTableBoady');
-                tbodyElement.innerHTML = '';
-                response.forEach((item,index)=> 
-                {
-                    const rowHTML = `<tr>
-                                        <td>${index + 1}</td>
-                                        <td>${item.category}</td>
-                                        <td>${item.brand} - ${item.product} - ${item.flavor}</td>
-                                        <td>${item.unit}</td>
-                                        <td>${item.total_qty}</td>
-                                        <td>${item.item_code}</td>
-                                    </tr>`;
-                        tbodyElement.innerHTML += rowHTML;
-                });
-            }
-        });
-        
+        // let log= $.ajax({
+        //     url: 'ajax/fetch_master.php',
+        //     type: 'GET',
+        //     data: {
+        //         stock:'stock',
+        //     },
+        //     dataType:'json',
+        //     success: function (response) 
+        //     {
+        //         const tbodyElement = document.getElementById('itemTableBoady');
+        //         tbodyElement.innerHTML = '';
+        //         response.forEach((item,index)=> 
+        //         {
+        //             const rowHTML = `<tr>
+        //                                 <td>${index + 1}</td>
+        //                                 <td>${item.category}</td>
+        //                                 <td>${item.brand} - ${item.product} - ${item.flavor}</td>
+        //                                 <td>${item.unit}</td>
+        //                                 <td>${item.total_qty}</td>
+        //                                 <td>${item.item_code}</td>
+        //                             </tr>`;
+        //                 tbodyElement.innerHTML += rowHTML;
+        //         });
+        //     }
+        // });
+        $('#stockExpiry').show();
+        $('#stockQty').hide();
+        vm.viewExpiryRecord();
         const tabElements = document.querySelectorAll('.cat');
         tabElements.forEach(tabName => {
             tabName.addEventListener('click', () => {
@@ -1567,23 +1569,23 @@ class Stock{
             }
         });
 
-        document.getElementById('categoryFilter').addEventListener('change', function() {
-            const selectedCategory = this.value;
-            if (selectedCategory === '') 
-            {
-                $('#itemTableBoady tr').show();
-            }else 
-            {
-                $('#itemTableBoady tr').hide();
-                $('#itemTableBoady tr').each(function() 
-                {
-                    if ($(this).find('td:nth-child(2)').text() == selectedCategory) 
-                    {
-                        $(this).show();
-                    }
-                });
-            }
-        });
+        // document.getElementById('categoryFilter').addEventListener('change', function() {
+        //     const selectedCategory = this.value;
+        //     if (selectedCategory === '') 
+        //     {
+        //         $('#itemTableBoady tr').show();
+        //     }else 
+        //     {
+        //         $('#itemTableBoady tr').hide();
+        //         $('#itemTableBoady tr').each(function() 
+        //         {
+        //             if ($(this).find('td:nth-child(2)').text() == selectedCategory) 
+        //             {
+        //                 $(this).show();
+        //             }
+        //         });
+        //     }
+        // });
     }
     viewExpiryRecord()
     {
@@ -1654,6 +1656,11 @@ class Stock{
                 {
                     const tbodyElement = document.getElementById('itemCodeBoady');
                     tbodyElement.innerHTML = '';
+                    const flavorSelect =document.getElementById('flavorSelect');
+                    $('#flavorSelect').find('option').remove();
+                    $('#flavorSelect').append(`<option value="">Select Falvor</option>`);
+                    var flavorOption = '';
+                    const uniqueFlavors = {};
                     response.forEach((item,index)=> 
                     {
                         const rowHTML = `<tr>
@@ -1664,13 +1671,35 @@ class Stock{
                                             <td>${item.unitQty}-${item.unit}</td>
                                             <td>${item.qty}</td>
                                             <td>${item.item_code}</td>
+                                            <td>${item.exp}</td>
                                         </tr>`;
                             tbodyElement.innerHTML += rowHTML;
+                            if(!uniqueFlavors[item.flavor])
+                            {
+                                flavorOption +=`<option>${item.flavor}</option>`;
+                                uniqueFlavors[item.flavor] = true;
+                            }
                     });
+                    $('#flavorSelect').append(flavorOption);
                 }
             });
         });
-        
+        document.getElementById('flavorSelect').addEventListener('change', function() {
+            const selectedCategory = this.value;
+            if (selectedCategory === '') 
+            {
+                $('#itemCodeBoady tr').show();
+            }else 
+            {
+                $('#itemCodeBoady tr').hide();
+                $('#itemCodeBoady tr').each(function() 
+                {
+                    if($(this).find('td:nth-child(4)').text() === selectedCategory) {
+                        $(this).show();
+                    }
+                });
+            }
+        });
     }
     allStock()
     {
@@ -1685,6 +1714,8 @@ class Stock{
             {
                 const tbodyElement = document.getElementById('allStockDataItems');
                 tbodyElement.innerHTML = '';
+                const totalAmountOfStock = document.getElementById('totalAmountOfStock');
+                var total=0;
                 response.forEach((item,index)=> 
                 {
                     const rowHTML = `<tr>
@@ -1697,9 +1728,31 @@ class Stock{
                                         <td>${item.gstprice}</td>
                                         <td>${item.saleprice}</td>
                                         <td>${item.qty}</td>
+                                        <td>${(item.gstprice * item.qty).toFixed(2)}</td>
                                         <td>${item.item_code}</td>
+                                        <td>${item.exp}</td>
                                     </tr>`;
                         tbodyElement.innerHTML += rowHTML;
+                        total = total+(item.gstprice * item.qty);
+                });
+                totalAmountOfStock.innerHTML =total.toFixed(2);
+            }
+        });
+
+        document.getElementById('categoryFilter').addEventListener('change', function() {
+            const selectedCategory = this.value;
+            if (selectedCategory === '') 
+            {
+                $('#allStockDataItems tr').show();
+            }else 
+            {
+                $('#allStockDataItems tr').hide();
+                $('#allStockDataItems tr').each(function() 
+                {
+                    if ($(this).find('td:nth-child(2)').text() == selectedCategory) 
+                    {
+                        $(this).show();
+                    }
                 });
             }
         });
@@ -2802,7 +2855,6 @@ class BillEdit
                 let log=$.ajax({
                     url:'',
                     type:'post'
-
                 })
             }
         });

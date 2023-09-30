@@ -22,11 +22,11 @@
             <div class="box-header">
                 <!-- <div class="getSpace">
                 </div> -->
-                <div class="cat active" id="stockbox">
+                <!-- <div class="cat active" id="stockbox">
                     <h6 class="box-header-names">view stock</h6>
                 </div>
                 <div class="getSpace">
-                </div>
+                </div> -->
                 <div class="cat" id="viewExpiry">
                     <h6 class="box-header-names">View Expiry</h6>
                 </div>
@@ -44,14 +44,14 @@
                 </div>
             </div>
             <div class="box-content" id="stockQty">
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-md-4" style="margin-left:40px;">
                         <label for="cate">Filter Category</label>
                         <select class="form-control" id="categoryFilter">
                             <option value="">Select Category</option>
                         </select>
                     </div>
-                </div>
+                </div> -->
                 <div class="row">
                     <div class="col-md-12">
                         <div class="table-container">
@@ -111,8 +111,14 @@
                         <label for="cate">Item Code</label>
                         <input type="text" class="form-control" id="itemcode"/>
                     </div>
-                    <div class="col-md-4" style="margin-left:40px; margin-top:30px;">
+                    <div class="col-md-1" style="margin-top:30px;">
                         <button id="search_byCode" class="btn btn-warning">Search</button>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="cate">Select Flavor</label>
+                        <select name="flavorSelect" id="flavorSelect" class="form-control">
+                            <option value="">SELECT</option>
+                        </select>
                     </div>
                 </div>
                 <div class="row">
@@ -128,6 +134,7 @@
                                         <th>Unit</th>
                                         <th>Qty</th>
                                         <th>Item Code</th>
+                                        <th>Expiry</th>
                                     </tr>
                                 </thead>
                                 <tbody id="itemCodeBoady">
@@ -139,6 +146,17 @@
                 </div>
             </div>
             <div class="box-content" id="allStockData" style="display:none">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="cate">Filter Category</label>
+                        <select class="form-control" id="categoryFilter">
+                            <option value="">Select Category</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4" style="margin-top:30px;">
+                        <p>Total Amount Of Stock- <b id="totalAmountOfStock"></b></p>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="table-container">
@@ -154,7 +172,9 @@
                                         <th>Gst Price</th>
                                         <th>Sale Price</th>
                                         <th>Qty</th>
+                                        <th>Total</th>
                                         <th>Item Code</th>
+                                        <th>Expiry</th>
                                     </tr>
                                 </thead>
                                 <tbody id="allStockDataItems">
