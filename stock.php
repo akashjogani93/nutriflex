@@ -27,8 +27,8 @@
                 </div>
                 <div class="getSpace">
                 </div> -->
-                <div class="cat" id="viewExpiry">
-                    <h6 class="box-header-names">View Expiry</h6>
+                <div class="cat active" id="viewExpiry">
+                    <h6 class="box-header-names">Near Expiry</h6>
                 </div>
                 <div class="getSpace">
                 </div>
@@ -84,14 +84,31 @@
                     </div>
                 </div> -->
                 <div class="row">
+                    <div class="col-md-4">
+                        <label for="cate">Filter Date</label>
+                        <select name="dateSelect" id="dateSelect" class="form-control">
+                            <option>12 Month</option>
+                            <option>6 Month</option>
+                            <option>3 Month</option>
+                            <option>1 Month</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group" style="dispaly:flex;">
+                            <button class="btn btn-success" id="excel" style="margin-top:30px;">Excel</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-12">
                         <div class="table-container">
-                            <table id="dataTable"  class="table table-bordered">
+                            <table id="expiryTableData"  class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>SL.NO</th>
                                         <th>Category-Brand-Product-Flavor</th>
                                         <th>Unit</th>
+                                        <th>Location</th>
                                         <th>Qty</th>
                                         <th>Item Code</th>
                                         <th>Expiry</th>
@@ -107,30 +124,37 @@
             </div> 
             <div class="box-content" id="stockByCodeData" style="display:none">
                 <div class="row">
-                    <div class="col-md-4" style="margin-left:40px;">
+                    <div class="col-md-4">
                         <label for="cate">Item Code</label>
                         <input type="text" class="form-control" id="itemcode"/>
                     </div>
                     <div class="col-md-1" style="margin-top:30px;">
                         <button id="search_byCode" class="btn btn-warning">Search</button>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="cate">Select Flavor</label>
                         <select name="flavorSelect" id="flavorSelect" class="form-control">
                             <option value="">SELECT</option>
                         </select>
                     </div>
+                    <div class="col-md-3">
+                        <div class="form-group" style="dispaly:flex;">
+                            <button class="btn btn-success" id="itemCodeExcel" style="margin-top:30px;">Excel</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="table-container">
-                            <table id="dataTable"  class="table table-bordered">
+                            <table id="itemCodeTable"  class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>SL.NO</th>
                                         <th>Category</th>
                                         <th>Brand-Product</th>
                                         <th>Flavor</th>
+                                        <th>Servings</th>
+                                        <th>Location</th>
                                         <th>Unit</th>
                                         <th>Qty</th>
                                         <th>Item Code</th>
@@ -153,6 +177,11 @@
                             <option value="">Select Category</option>
                         </select>
                     </div>
+                    <div class="col-md-1">
+                        <div class="form-group" style="dispaly:flex;">
+                            <button class="btn btn-success" id="allstockExcel" style="margin-top:30px;">Excel</button>
+                        </div>
+                    </div>
                     <div class="col-md-4" style="margin-top:30px;">
                         <p>Total Amount Of Stock- <b id="totalAmountOfStock"></b></p>
                     </div>
@@ -160,7 +189,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="table-container">
-                            <table id="dataTable"  class="table table-bordered">
+                            <table id="allstockDataTable"  class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>SL.NO</th>

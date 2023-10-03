@@ -23,6 +23,8 @@
   <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.0/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
 
   <link rel="stylesheet" href="asset/style.css">
 

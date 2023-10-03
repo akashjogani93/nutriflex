@@ -556,12 +556,13 @@ class Purchase
                         $salePrice=$item['salePrice'];
                         $item_code=$item['item_code'];
                         $unitQty=$item['unitQty'];
-                        $purchase_dataStmt=$this->conn->prepare("INSERT INTO `purchase_data`(`category`, `brand`, `product`, `flavor`, `unit`, `location`, `exp`, `gst`, `qty`, `totalprice`, `gstprice`, `baseprice`, `mrpprice`, `saleprice`, `item_code`, `pur_id`,`unitQty`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-                        $purchase_dataStmt->bind_param("sssssssdddddddsis",$category,$brand,$product,$flavor,$unit,$location,$expDate,$gst,$qty,$price,$gstPer,$basePer,$mrpPrice,$salePrice,$item_code,$purchaseId,$unitQty);
+                        $servings=$item['servings'];
+                        $purchase_dataStmt=$this->conn->prepare("INSERT INTO `purchase_data`(`category`, `brand`, `product`, `flavor`, `unit`, `location`, `exp`, `gst`, `qty`, `totalprice`, `gstprice`, `baseprice`, `mrpprice`, `saleprice`, `item_code`, `pur_id`,`unitQty`,`servings`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                        $purchase_dataStmt->bind_param("sssssssdddddddsiss",$category,$brand,$product,$flavor,$unit,$location,$expDate,$gst,$qty,$price,$gstPer,$basePer,$mrpPrice,$salePrice,$item_code,$purchaseId,$unitQty,$servings);
                         if($purchase_dataStmt->execute())
                         {
-                            $stock_dataStmt=$this->conn->prepare("INSERT INTO `stock`(`category`, `brand`, `product`, `flavor`, `unit`, `location`, `exp`, `gst`, `qty`, `totalprice`, `gstprice`, `baseprice`, `mrpprice`, `saleprice`, `item_code`, `pur_id`,`unitQty`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-                            $stock_dataStmt->bind_param("sssssssdddddddsis",$category,$brand,$product,$flavor,$unit,$location,$expDate,$gst,$qty,$price,$gstPer,$basePer,$mrpPrice,$salePrice,$item_code,$purchaseId,$unitQty);
+                            $stock_dataStmt=$this->conn->prepare("INSERT INTO `stock`(`category`, `brand`, `product`, `flavor`, `unit`, `location`, `exp`, `gst`, `qty`, `totalprice`, `gstprice`, `baseprice`, `mrpprice`, `saleprice`, `item_code`, `pur_id`,`unitQty`,`servings`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                            $stock_dataStmt->bind_param("sssssssdddddddsiss",$category,$brand,$product,$flavor,$unit,$location,$expDate,$gst,$qty,$price,$gstPer,$basePer,$mrpPrice,$salePrice,$item_code,$purchaseId,$unitQty,$servings);
                             if($stock_dataStmt->execute())
                             {
                                 $allQueriesSuccessful = "true";  

@@ -1178,6 +1178,7 @@ class Purchase {
         let mrpPrice=$('#mrpPrice').val();
         let salePrice=$('#salePrice').val();
         let unitQty=$('#unitQty').val();
+        let servings=$('#servings').val();
         var input=['#category','#brand','#product','#flavor','#unit','#location','#expDate','#gst',,'#qty','#price','#mrpPrice','#salePrice','#unitQty'];
         for(let i=0; i<input.length; i++)
         {
@@ -1209,6 +1210,7 @@ class Purchase {
             mrpPrice:mrpPrice,
             salePrice:salePrice,
             unitQty:unitQty,
+            servings:servings,
         };
 
         let existingItems = localStorage.getItem('items');
@@ -1226,7 +1228,7 @@ class Purchase {
             itemsArray.push(newItem);
             localStorage.setItem('items', JSON.stringify(itemsArray));
             this.fetchItems();
-            var input1=['#flavor','#unit','#location','#expDate','#gst',,'#qty','#price','#mrpPrice','#salePrice','#unitQty',`#item_code`,`#gstPer`,`#basePer`];
+            var input1=['#flavor','#unit','#location','#expDate','#gst',,'#qty','#price','#mrpPrice','#salePrice','#unitQty',`#item_code`,`#gstPer`,`#basePer`,`#servings`];
             for(let i=0; i<input1.length; i++)
             {
                 $(input1[i]).val('')
@@ -1258,6 +1260,7 @@ class Purchase {
                     row.innerHTML = `
                         <td>${index + 1}</td>
                         <td>${item.category} - ${item.brand} - ${item.product} - ${item.flavor}</td>
+                        <td>${item.servings}</td>
                         <td>${item.unit}-${item.unitQty}</td>
                         <td>${item.gst}</td>
                         <td>${item.qty}</td>
@@ -1589,11 +1592,38 @@ class Stock{
     }
     viewExpiryRecord()
     {
+        const vm=this;
+        var selectedCategory='12 Month';
+        vm.fetch_data(selectedCategory);
+        document.getElementById('dateSelect').addEventListener('change', function() {
+            selectedCategory = this.value;
+            vm.fetch_data(selectedCategory);
+        });
+
+        const excel=document.getElementById('excel');
+        excel.addEventListener('click',() => 
+        {
+            const table = document.getElementById('expiryTableData');
+            const tbody = table.querySelector('tbody');
+            if (!tbody || tbody.rows.length === 0)
+            {
+                return;
+            }
+
+            var fileName='ExpiryTable.xlsx';
+            const excelData = new EXCELDATA();
+            excelData.exportExcel(table,fileName);
+        });
+
+    }
+    fetch_data(selectedCategory)
+    {
         let log= $.ajax({
             url: 'ajax/fetch_master.php',
             type: 'GET',
             data: {
                 expiry:'expiry',
+                selectedCategory:selectedCategory,
             },
             dataType:'json',
             success: function (response) 
@@ -1605,7 +1635,8 @@ class Stock{
                     const rowHTML = `<tr>
                                         <td>${index + 1}</td>
                                         <td>${item.category} - ${item.brand} - ${item.product} - ${item.flavor}</td>
-                                        <td>${item.unit}</td>
+                                        <td>${item.unitQty}-${item.unit}</td>
+                                        <td>${item.location}</td>
                                         <td>${item.qty}</td>
                                         <td>${item.item_code}</td>
                                         <td>${item.exp}</td>
@@ -1668,6 +1699,8 @@ class Stock{
                                             <td>${item.category}</td>
                                             <td>${item.brand} - ${item.product}</td>
                                             <td>${item.flavor}</td>
+                                            <td>${item.servings}</td>
+                                            <td>${item.location}</td>
                                             <td>${item.unitQty}-${item.unit}</td>
                                             <td>${item.qty}</td>
                                             <td>${item.item_code}</td>
@@ -1699,6 +1732,20 @@ class Stock{
                     }
                 });
             }
+        });
+
+        const excel=document.getElementById('itemCodeExcel');
+        excel.addEventListener('click',() => 
+        {
+            const table = document.getElementById('itemCodeTable');
+            const tbody = table.querySelector('tbody');
+            if (!tbody || tbody.rows.length === 0)
+            {
+                return;
+            }
+            var fileName='ItemCode.xlsx';
+            const excelData = new EXCELDATA();
+            excelData.exportExcel(table,fileName);
         });
     }
     allStock()
@@ -1755,6 +1802,21 @@ class Stock{
                     }
                 });
             }
+        });
+
+        const excel=document.getElementById('allstockExcel');
+        excel.addEventListener('click',() => 
+        {
+            console.log('running');
+            const table = document.getElementById('allstockDataTable');
+            const tbody = table.querySelector('tbody');
+            if (!tbody || tbody.rows.length === 0)
+            {
+                return;
+            }
+            var fileName='allStock.xlsx';
+            const excelData = new EXCELDATA();
+            excelData.exportExcel(table,fileName);
         });
     }
 }
@@ -2615,11 +2677,60 @@ class Profit
 {
     fetchProfitTable()
     {
+        const vm=this;
+        vm.viewProfitData(0);
+        const search=document.getElementById('search');
+        search.addEventListener('click',() => 
+        {
+            vm.viewProfitData(1);
+        });
+        const refresh=document.getElementById('refresh');
+        refresh.addEventListener('click',() => 
+        {
+            vm.viewProfitData(0);
+        });
+        const excel=document.getElementById('excel');
+        excel.addEventListener('click',() => 
+        {
+            vm.exportTableToExcel();
+        });
+    }
+    viewProfitData(sta)
+    {
+        if(sta==0)
+        {
+            var datecurrent = new Date();
+            var currentDate= datecurrent.toISOString().substr(0, 10)
+            $('#dateto').val(currentDate);
+
+            var yourDateValue = new Date();
+            yourDateValue.setDate(1);
+            var formattedDate = yourDateValue.toISOString().substr(0, 10);
+            $('#datefrom').val(formattedDate);
+        }else if(sta==1)
+        {
+            var formattedDate=$('#datefrom').val();
+            var currentDate=$('#dateto').val();
+            var input=['#datefrom','#dateto'];
+            for(var i=0; i<input.length; i++)
+            {
+                if($(input[i]).val() == '')
+                {
+                    $(input[i]).css("border", "1px solid red");
+                    return;
+                }else
+                {
+                    $(input[i]).css("border","");
+                }
+            }
+        }
         let log= $.ajax({
             url: 'ajax/fetch_master.php',
             type: 'GET',
             data: {
                 profit:'profit',
+                currentDate:currentDate,
+                dateFrom:formattedDate,
             },
             dataType:'json',
             success: function (response) 
@@ -2630,6 +2741,8 @@ class Profit
                 {
                     const rowHTML = `<tr>
                                         <td>${index + 1}</td>
+                                        <td>${item.date}</td>
+                                        <td>${item.ivoice_id}</td>
                                         <td>${item.item_code}</td>
                                         <td>${item.product}</td>
                                         <td>${item.basePur.toFixed(2)}</td>
@@ -2637,13 +2750,22 @@ class Profit
                                         <td>${item.profitPer.toFixed(2)}</td>
                                         <td>${item.qty}</td>
                                         <td>${item.totalPfofit.toFixed(2)}</td>
-                                        <td>${item.date}</td>
-                                        <td>${item.ivoice_id}</td>
                                     </tr>`;
                         tbodyElement.innerHTML += rowHTML;
                 });
             }
         });
+    }
+    exportTableToExcel() 
+    {
+        const table = document.getElementById('dataTable');
+        const tbody = table.querySelector('tbody');
+        if (!tbody || tbody.rows.length === 0) 
+        {
+            return;
+        }
+        const wb = XLSX.utils.table_to_book(table);
+        XLSX.writeFile(wb, 'Profit_table.xlsx');
     }
 }
 
@@ -2858,5 +2980,15 @@ class BillEdit
                 })
             }
         });
+    }
+}
+
+
+class EXCELDATA
+{
+    exportExcel(table,fileName)
+    {
+        const wb = XLSX.utils.table_to_book(table);
+        XLSX.writeFile(wb, fileName);
     }
 }

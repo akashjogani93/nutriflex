@@ -15,8 +15,12 @@
         <script src="https://cdn.datatables.net/1.11.0/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="js/main.js"></script>
-
         <style>
+            .container-fluid
+            {
+                border:1px solid black !important;
+                margin-top:10px;
+            }
             .main
              {
                 margin-top:15px;
@@ -42,9 +46,34 @@
             {
                 font-size:12px;
             }
-            .custDetails , .details{
+            /* .custDetails , .details{
                 border: 1px solid #dee2e6;
                 padding:10px;
+            } */
+            .invoiceHeader
+            {
+                display:flex;
+                border-bottom:1px solid black;
+            }
+            .box1
+            {
+                width:40%;
+                padding-right:10px;
+            }
+            .box2
+            {
+                padding-left:10px;
+            }
+            .box-border
+            {
+                border-right:1px solid black;
+                height: 160px;
+                margin-top: -15px;
+            }
+            .custDetails
+            {
+                padding-left:10px;
+                width:35%;
             }
             @page{
                 margin:0;
@@ -56,6 +85,46 @@
     <div class="container-fluid">
         <div class="main">
             <div class="row">
+                <div class="col-md-12">
+                <div class="invoiceHeader">
+                    <div class="box1">
+                        <h2>FLEX NUTRISHOP</h2>
+                        <strong>SHOP NO 02, SHIVARSHNI APTS, OLD INCOME TAX ROAD,</strong>
+                        <strong>NEAR NOOLVI BUILDING, VIDHYANAGAR, HUBLI - 580021</strong></br>
+                        <strong>PH NO : 7021659424 | GSTIN: 29ASFPK4675E1ZI | STATE CODE: 29 KARNATAKA</strong>
+                    </div>
+                    <div class="box-border">
+                    </div>
+                    <div class="custDetails">
+                        <h6><b>NAME : M/S. </b><span id="name"> </span></h6>
+                        <h6><b>ADDRESS : </b><span id="adds"></span></h6>
+                        <h6><b>MOBILE NO : </b><span id="mobile"></span></h6>
+                        <h6><b>MODE OF PAYMENT : </b><span id="pay"></span></h6>
+                        <h6><b>PARTY GST :</b><span id="gst"></span></h6>
+                    </div>
+                    <div class="box-border">
+                    </div>
+                    <div class="box2">
+                        <div class="details" style="margin-bottom:4px;">
+                            <h6><b>INVOICE NO : </b><span id="inv"> </span></h6>
+                            <h6><b>Date : </b><span id="date"> </span></h6>
+                        </div>
+                        <div class="details">
+                            <p>GOODS DESPATCHED THROUGH : </p>
+                        </div>
+                        <div class="details" style="border-top:0">
+                            <p>E WAY. BILL NO : </p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        <!-- </br>
+        </br>
+        </br>
+        </br>
+        </br> -->
+            <!-- <div class="row">
                 <div class="col-md-5">
                     <div class="box1">
                         <h2>FLEX NUTRISHOP</h2>
@@ -85,7 +154,7 @@
                         <p>E WAY. BILL NO : </p>
                     </div>
                 </div>
-            </div>
+            </div> -->
             </br>
             <div class="row">
                 <div class="col-md-12">

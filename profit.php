@@ -31,12 +31,36 @@
             </div>
             <div class="box-content" id="addPurchaseData">
                 <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                        <label for="cate">Date From:</label>
+                            <input type="date" name="datefrom" id="datefrom" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                        <label for="cate">Date To:</label>
+                            <input type="date" name="dateto" id="dateto" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group" style="dispaly:flex;">
+                            <button class="btn btn-info" id="search" style="margin-top:25px; margin-right:5px">SEARCH</button>
+                            <button class="btn btn-warning" id="refresh" style="margin-top:25px;">REFRESH</button>
+                            <button class="btn btn-success" id="excel" style="margin-top:25px;">Excel</button>
+                        </div>
+                    </div>
+                </div>
+                </br>
+                <div class="row">
                     <div class="col-md-12">
                         <div class="table-container">
                             <table id="dataTable"  class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>SL.NO</th>
+                                        <th>Date</th>
+                                        <th>Invoice</th>
                                         <th>Item Code</th>
                                         <th>Product</th>
                                         <th>Base Price</th>
@@ -44,8 +68,6 @@
                                         <th>Profit</th>
                                         <th>Qty</th>
                                         <th>Total Profit</th>
-                                        <th>Date</th>
-                                        <th>Invoice</th>
                                     </tr>
                                 </thead>
                                 <tbody id="profitTable">

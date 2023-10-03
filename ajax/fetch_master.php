@@ -1,8 +1,5 @@
 <?php 
     include('../connect.php');
-
-
-
 $tableName = "";
 $maxtableName = "";
 if(isset($_GET['tabId']))
@@ -485,7 +482,10 @@ if(isset($_GET['invoiceRecordItem']))
 
 if(isset($_GET['profit']))
 {
-    $fetchStmt=$conn->prepare("SELECT `profit`.*,`invoice_data`.`item_code`,`invoice_data`.`product`,`invoice`.`date` FROM `profit`,`invoice_data`,`invoice` WHERE `profit`.`ivoicedata_id`=`invoice_data`.`id` AND `profit`.`ivoice_id`=`invoice`.`id`");
+    $currentDate=$_GET['currentDate'];
+    $dateFrom=$_GET['dateFrom'];
+    $fetchStmt=$conn->prepare("SELECT `profit`.*,`invoice_data`.`item_code`,`invoice_data`.`product`,`invoice`.`date` FROM `profit`,`invoice_data`,`invoice` WHERE `profit`.`ivoicedata_id`=`invoice_data`.`id` AND `profit`.`ivoice_id`=`invoice`.`id` AND `invoice`.`date` BETWEEN ? AND ?");
+    $fetchStmt->bind_param('ss', $dateFrom, $currentDate);
     $fetchStmt->execute();
     $result=$fetchStmt->get_result();
 
@@ -503,7 +503,21 @@ if(isset($_GET['profit']))
 //invoices
 if(isset($_GET['expiry']))
 {
-    $fetchStmt = $conn->prepare("SELECT * FROM `stock` WHERE `exp` <= DATE_ADD(CURDATE(), INTERVAL 180 DAY) AND `qty` != 0");
+    $selectedCategory=$_GET['selectedCategory'];
+    if($selectedCategory=='12 Month')
+    {
+        $days=365;
+    }else if($selectedCategory=='6 Month')
+    {
+        $days=180;
+    }else if($selectedCategory=='3 Month')
+    {
+        $days=90;
+    }else if($selectedCategory=='1 Month')
+    {
+        $days=30;
+    }
+    $fetchStmt = $conn->prepare("SELECT * FROM `stock` WHERE `exp` <= DATE_ADD(CURDATE(), INTERVAL $days DAY) AND `qty` != 0");
     $fetchStmt->execute();
     $result=$fetchStmt->get_result();
 

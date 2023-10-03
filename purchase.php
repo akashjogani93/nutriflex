@@ -137,6 +137,12 @@
                     <div class="row">
                         <div class="col-md-2">
                             <div class="form-group">
+                                <label for="cate">Servings</label>
+                                <input type="text" class="form-control" id="servings">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
                                 <label for="cate">mrp</label>
                                 <input type="text" class="form-control" id="mrpPrice">
                             </div>
@@ -169,6 +175,7 @@
                                         <tr>
                                             <th>Sl.No</th>
                                             <th>Category-Brand-Product-Flavor</th>
+                                            <th>Servings</th>
                                             <th>Unit</th>
                                             <th>GST</th>
                                             <th>Qty</th>
