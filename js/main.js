@@ -100,20 +100,20 @@ class TabManager
                     const rowData = getDataFromTableRow(row);
                 }
             });
-        // if(tabId != 'gst')
-        // {
-        //     $('.nameFeild').keypress(function(event)
-        //     {
-        //         var keycode = (event.keyCode ? event.keyCode : event.which);
-        //         if ((keycode < 47 || keycode > 57))
-        //         {
-        //             return true;
-        //         }else
-        //         {
-        //             return false;
-        //         }
-        //     });
-        // }
+            // if(tabId != 'gst')
+            // {
+                // $('.nameFeild').keypress(function(event)
+                // {
+                //     var keycode = (event.keyCode ? event.keyCode : event.which);
+                //     if ((keycode < 47 || keycode > 57))
+                //     {
+                //         return true;
+                //     }else
+                //     {
+                //         return false;
+                //     }
+                // });
+            // }
     }
 
     async fetchAndPopulateData(tabId) 
